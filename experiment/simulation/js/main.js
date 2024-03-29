@@ -899,7 +899,7 @@ const Scenes = {
 
     switch(step){
       case "1_1" : 
-        instructionImg = Scenes.items.part_1_1_instruction_box.set(0,0).zIndex(50).hide()
+        instructionImg = Scenes.items.part_1_1_instruction_box.set(-242,-329,800).zIndex(50).hide()
         procedureImg = Scenes.items.part_1_1_procedure_box.set(-150,-500).zIndex(50).hide()
         nomenclatureImg = Scenes.items.part_1_1_nomenclature_box.set(-374,null,800).zIndex(50).hide()
         conclusionImg = Scenes.items.part_1_1_conclusion_box.set(null,-140,600).zIndex(50).hide()
@@ -910,7 +910,7 @@ const Scenes = {
         break;
 
       case "1_2" :  
-        instructionImg = Scenes.items.part_1_2_instruction_box.set(-100,80,500).hide().zIndex(50)
+        instructionImg = Scenes.items.part_1_2_instruction_box.set(-135,-46,500).hide().zIndex(50)
         procedureImg = Scenes.items.part_1_2_procedure_box.set(-100,80,500).hide().zIndex(50)
         nomenclatureImg = Scenes.items.part_1_2_nomenclature_box.set(-100,0,400).hide().zIndex(50)
         conclusionImg = Scenes.items.part_1_1_conclusion_box.set(10,5,700).hide().zIndex(50)
@@ -921,7 +921,7 @@ const Scenes = {
         break;
 
       case "2" :  
-        instructionImg = Scenes.items.part_2_instruction_box.set(-100,80,500).hide().zIndex(50)
+        instructionImg = Scenes.items.part_2_instruction_box.set(-135,-46,500).hide().zIndex(50)
         procedureImg = Scenes.items.part_2_procedure_box.set(-80,-100,500).hide().zIndex(50)
         nomenclatureImg = Scenes.items.part_2_nomenclature_box.set(-100,0,500).hide().zIndex(50)
         conclusionImg = Scenes.items.part_1_1_conclusion_box.set(10,-10,700).hide().zIndex(50)
@@ -946,10 +946,17 @@ const Scenes = {
       nomenclatureImg.show().zIndex(40)
     }
     let showConclusionImg = function(){
+      // Dom.setBlinkArrowRed(-1)
       conclusionImg.show().zIndex(40)
       if(!Scenes.popupImgHoverdConclusion[calledFor]){
         speakConclusion()
         Scenes.popupImgHoverdConclusion[calledFor] = true
+        setTimeout(()=>{
+          Dom.setBlinkArrow(true, 790, 544).play();
+          Dom.setBlinkArrowRed(-1)
+          setCC("Click 'Next' to go to next step");
+          setIsProcessRunning(false);
+        },25000)
       }
     }
     
@@ -1080,7 +1087,7 @@ const Scenes = {
 
       Scenes.items.concept_development.set().styles({
         zIndex: "5000",
-        scale: "1 0.914",
+        scale: "1.07 0.906",
         top: "-143px",
         position: "absolute",
       })
@@ -1114,7 +1121,7 @@ const Scenes = {
       Scenes.items.contentAdderBox.item.innerHTML = "";
 
       Scenes.setStepHeading("Step-1", "To Plot Different Characteristics.");
-      setCC("Click on the 'ICON' to plot the characteristics.")
+      setCC("Here all possible schemes for characteristics generation of IGBT are displayed. Click on the relevant characteristics that you want to perform experiment for.")
 
       // * remove all previous restrictions
 
@@ -1163,15 +1170,10 @@ const Scenes = {
         Scenes.currentStep = 5
         Scenes.next()
       }
-      const opFour = () => {
-        Scenes.optionsDone[3] = 1;
-        Scenes.forMathematicalExpressionBtn = 4;
-        Scenes.steps[3 + 3]();
-      }
+     
       options[0].item.onclick = opOne;
       options[1].item.onclick = opTwo;
       options[2].item.onclick = opThree;
-      options[3].item.onclick = opFour;
 
       // ! if all options done then exit
       let exit = true
@@ -1189,7 +1191,7 @@ const Scenes = {
         setIsProcessRunning(false);
       }
 
-      return true;
+      return false;
     }),
   
     (step2 = function () {
@@ -1211,7 +1213,6 @@ const Scenes = {
           .zIndex(10),
         Scenes.items.btn_reset.set(660, 190 + 165, 40).zIndex(10)
       ]
-
 
       // required images
       let images = [
@@ -1240,14 +1241,15 @@ const Scenes = {
       })
 
       let cables_color = [
-          "#970101",
-          "#1a2f55",
-          "#186a3b",
-          "#181818",
-          "#ffd90e",
-          "#181818",
-          "#cf426d",
-          "#560056",
+      // meters
+          "#e60404", 
+          "#243d6a", 
+          "#0bc45e",
+          "#828282", 
+          "#e4ad07", 
+          "#202020", 
+          "#c33a64", 
+          "#4a004a", 
       ]
 
 
@@ -1581,16 +1583,17 @@ const Scenes = {
       })
 
       let cables_color = [
-        "#e40d0d",
-        "#162848",
-        "#037c3a",
-        "#020202",
-        "#ffe714",
-        "#555252",
-        "#9d9d9d",
-        "#0f1f3b",
-        "#974f1e",
-        "#670202",
+             //oscilliscope
+          "#f31919", 
+          "#1d325a", 
+          "#ffd104", 
+          "#044e04", 
+          "#fd0167",
+          "#2f2d2d", 
+          "#848484", 
+          "#e39bb7", 
+          "#d16e2b", 
+          "#022802", 
       ]
 
       function hideConnectionStepImgs(){
@@ -1894,16 +1897,20 @@ const Scenes = {
       })
 
       let cables_color = [
-        "#e40000",
-        "#4f699a",
-        "#008039",
-        "#0d0d0d",
-        "#f9c101",
-        "#7f3a0b",
-        "#b6355d",
-        "#851b85",
-        "#073007",
-        "#7c5565",
+       //transfer characteristics
+
+          "#fa0404",
+          "#375081", 
+          "#e3156d", 
+          "#898989", 
+          "#e2b019", 
+          "#4d4d4d",
+          "#025f02", 
+          "#6d066d", 
+          "#74350c", 
+          "#121212", 
+
+  
       ]
       
       function hideConnectionStepImgs(){
@@ -2131,7 +2138,7 @@ const Scenes = {
       // setCC("Record 7 reading for 3 different load resistances.")
       // ! show the slider
       // Scenes.items.slider_box.set(25, 15).scale(0.95);
-      Scenes.items.btn_next.show();
+      Scenes.items.btn_next.show()
 
       //! Required Items
       Scenes.items.part_3_components.set(0,-55,null, 950 )
@@ -2229,7 +2236,7 @@ const Scenes = {
 // rangeSlider();
 
 // stepcalling
-Scenes.currentStep = 2
+Scenes.currentStep = 1
 Scenes.next()
 // Scenes.steps[3]()
 // Scenes.next()

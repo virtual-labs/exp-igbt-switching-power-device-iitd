@@ -229,9 +229,10 @@ const sliders = {
                 Dom.setBlinkArrowRed(true,840,-15,null,null,90).play()
                 setCC("Goto 'Conclusion'")
                 setTimeout(()=>{
-                  Dom.setBlinkArrowRed(true, 790, 444).play();
+                  // Dom.setBlinkArrowRed(true, 790, 444).play();
                   setCC("Click 'Next' to go to next step");
                   setIsProcessRunning(false);
+                  
                 },25000)
                 // for going to the second step
                 Scenes.currentStep = 2
