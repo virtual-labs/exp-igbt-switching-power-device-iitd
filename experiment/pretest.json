@@ -41,7 +41,7 @@
     
     {
 
-      "question": "3. Identify the three terminals of IGBT- collector (C), emitter (E) and gate (G) in the IGBT figure given below from left-to-right.<br><center><img src='images/pr2.png' height='300px'></center><br>",
+      "question": "3. Identify the three terminals of IGBT- collector (C), emitter (E) and gate (G) in the IGBT figure given below from left-to-right.<br><center><img src='images/pr1.png' height='300px'></center><br>",
       "answers": {
         "a": "(i)- gate, (ii)- collector, (iii)- emitter",
         "b": "(i)- collector, (ii)- emitter, (iii)- gate",
@@ -100,10 +100,10 @@
 
       "question": "6. The correct symbolic representation of an IGBT is?",
       "answers": {
-        "a": "<img src='images/pr3.png' height='70px'>",
-        "b": "<img src='images/pr4.png' height='70px'>",
-        "c": "<img src='images/pr5.png' height='70px'>",
-        "d": "<img src='images/pr6.png' height='70px'>"
+        "a": "<img src='images/pr2.png' height='70px'>",
+        "b": "<img src='images/pr3.png' height='70px'>",
+        "c": "<img src='images/pr4.png' height='70px'>",
+        "d": "<img src='images/pr5.png' height='70px'>"
       },
       "explanations": {
         "a": "Explanation 1  <a href='www.google.com'>here</a>",
