@@ -99,9 +99,9 @@ Fig. 4. Output characteristics of IGBT.
 <br> 
 IGBT has three operating regions: Cutoff region, Linear region and Saturation region as shown in Fig. 4. <br><br>
 
-a)  In cutoff region, the Gate voltage is lower than the threshold (VT) and the IGBT doesn’t conduct.<br>
-b)  In linear region, the Collector current IC varies in proportion to the Collector-to-Emitter voltage VCE. IGBT is operated in the linear region for switching actions.<br>
-c)  In the saturation region, the Collector current remains almost constant for any increase in the value of VCE.<br>
+a)  In cutoff region, the Gate voltage is lower than the threshold (V<sub>T</sub>) and the IGBT doesn’t conduct.<br>
+b)  In linear region, the Collector current I<sub>C</sub> varies in proportion to the Collector-to-Emitter voltage V<sub>CE</sub>. IGBT is operated in the linear region for switching actions.<br>
+c)  In the saturation region, the Collector current remains almost constant for any increase in the value of V<sub>CE</sub>.<br>
 
 <div style="float: left; width:100%;"><br>
   
