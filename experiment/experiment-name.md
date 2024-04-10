@@ -1,1 +1,1 @@
-## Characteristics of high frequency MOSFET switching power device
+## Characteristics of high frequency IGBT switching power device
