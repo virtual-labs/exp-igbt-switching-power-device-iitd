@@ -30,12 +30,12 @@
         "d": "Collector-to-Emitter voltage (V<sub>CE</sub>) vs- Gate Current (I<sub>G</sub>)"
       },
       "explanations": {
-        "a": "Explanation 1",
-        "b": "Explanation 2: Transfer characteristics of IGBT shows the relation between the Gate-to-Emitter voltage and the Collector current.",
+        "a": "Explanation 1: Transfer characteristics of IGBT shows the relation between the Gate-to-Emitter voltage and the Collector current.",
+        "b": "Explanation 2",
         "c": "Explanation 3",
         "d": "Explanation 4"
       },
-      "correctAnswer": "b",
+      "correctAnswer": "a",
       "difficulty": "beginner"
     },
     
@@ -146,10 +146,10 @@
       "explanations": {
         "a": "Explanation 1",
         "b": "Explanation 2",
-        "c": "Explanation 3",
-        "d": "Explanation 4: IGBT is turned- OFF when gate pulse is removed. "
+        "c": "Explanation 3: IGBT is turned- OFF when gate pulse is removed.",
+        "d": "Explanation 4"
       },
-      "correctAnswer": "d",
+      "correctAnswer": "c",
       "difficulty": "beginner"
     }
 
