@@ -11,10 +11,10 @@
         "d": "Its lightly doped n-region is connected to its collector"
       },
       "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
+        "a": "Explanation 1: IGBT is a minority carrier device as it operates mainly on the principle of controlling the flow of minority carriers (holes).",
         "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
+        "c": "Explanation 3",
+        "d": "Explanation 4"
       },
       "correctAnswer": "a",
       "difficulty": "beginner"
@@ -30,10 +30,10 @@
         "d": "Collector-to-Emitter voltage (V<sub>CE</sub>) vs- Gate Current (I<sub>G</sub>)"
       },
       "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
-        "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
+        "a": "Explanation 1",
+        "b": "Explanation 2: Transfer characteristics of IGBT shows the relation between the Gate-to-Emitter voltage and the Collector current.",
+        "c": "Explanation 3",
+        "d": "Explanation 4"
       },
       "correctAnswer": "b",
       "difficulty": "beginner"
@@ -49,10 +49,10 @@
         "d": "Reverse blocking"
       },
       "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
+        "a": "Explanation 1",
         "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
+        "c": "Explanation 3: When IGBT is in saturation mode, its collector current remains constant.",
+        "d": "Explanation 4"
       },
       "correctAnswer": "c",
       "difficulty": "beginner"
@@ -68,10 +68,10 @@
         "d": "Half"
       },
       "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
+        "a": "Explanation 1",
         "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
+        "c": "Explanation 3: IGBT turn- OFF time is greater than MOSFET due to the presence of tail current.",
+        "d": "Explanation 4"
       },
       "correctAnswer": "c",
       "difficulty": "beginner"
@@ -87,10 +87,10 @@
         "d": "IGBT stops conducting (Forward blocking state)."
       },
       "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
+        "a": "Explanation 1",
         "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
+        "c": "Explanation 3",
+        "d": "Explanation 4: IGBT is turned- OFF when gate pulse is withdrawn."
       },
       "correctAnswer": "d",
       "difficulty": "beginner"
@@ -106,10 +106,10 @@
         "d": "Allowing Gate current (I<sub>G</sub>)"
       },
       "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
+        "a": "Explanation 1",
         "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
+        "c": "Explanation 3: IGBT comes into conduction when gate-to-emitter voltage above the threshold value is given.",
+        "d": "Explanation 4"
       },
       "correctAnswer": "c",
       "difficulty": "beginner"
@@ -125,10 +125,10 @@
         "d": "Double"
       },
       "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
-        "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
+        "a": "Explanation 1",
+        "b": "Explanation 2: IGBT has lower ON-state resistance and hence lower conduction losses compared to MOSFET.",
+        "c": "Explanation 3",
+        "d": "Explanation 4"
       },
       "correctAnswer": "b",
       "difficulty": "beginner"
@@ -144,10 +144,10 @@
         "d": "By applying positive collector-to-emitter voltage (V<sub>CE</sub>)."
       },
       "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
+        "a": "Explanation 1",
         "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
+        "c": "Explanation 3",
+        "d": "Explanation 4: IGBT is turned- OFF when gate pulse is removed. "
       },
       "correctAnswer": "d",
       "difficulty": "beginner"
