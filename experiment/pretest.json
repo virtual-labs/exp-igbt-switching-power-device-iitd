@@ -11,10 +11,10 @@
         "d": "IGBT has three junctions."
       },
       "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
+        "a": "Explanation 1",
         "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
+        "c": "Explanation 3: IGBT is a unidirectional device and allows current to flow only from Collector to Emitter when sufficient Gate-to-Emitter voltage is applied.",
+        "d": "Explanation 4"
       },
       "correctAnswer": "c",
       "difficulty": "beginner"
@@ -30,12 +30,12 @@
         "d": "BJT and TRIAC"
       },
       "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
+        "a": "Explanation 1",
         "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
+        "c": "Explanation 3: IGBT structure is a combination of MOSFET (at the input side) and BJT (output side).",
+        "d": "Explanation 4"
       },
-      "correctAnswer": "a",
+      "correctAnswer": "c",
       "difficulty": "beginner"
     },
     
@@ -49,10 +49,10 @@
         "d": "(i)- emitter, (ii)- collector, (iii)- gate"
       },
       "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
+        "a": "Explanation 1: Standard nomenclature adopted.",
         "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
+        "c": "Explanation 3",
+        "d": "Explanation 4"
       },
       "correctAnswer": "a",
       "difficulty": "beginner"
@@ -68,10 +68,10 @@
         "d": "IGBT is best suited for frequencies above 100 kHz applications"
       },
       "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
+        "a": "Explanation 1: IGBT has lower conduction losses compared to MOSFET.",
         "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
+        "c": "Explanation 3",
+        "d": "Explanation 4"
       },
       "correctAnswer": "a",
       "difficulty": "beginner"
@@ -87,10 +87,10 @@
         "d": "Low power, high frequency"
       },
       "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
-        "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
+        "a": "Explanation 1",
+        "b": "Explanation 2: Due to low conduction losses and higher switching time, IGBT is suited for high power, low frequency applications.",
+        "c": "Explanation 3",
+        "d": "Explanation 4"
       },
       "correctAnswer": "b",
       "difficulty": "beginner"
@@ -106,10 +106,10 @@
         "d": "<img src='images/pr5.png' height='70px'>"
       },
       "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
+        "a": "Explanation 1",
         "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
+        "c": "Explanation 3",
+        "d": "Explanation 4: Standard nomenclature adopted."
       },
       "correctAnswer": "d",
       "difficulty": "beginner"
@@ -125,10 +125,10 @@
         "d": "IGBT is controlled using a train of firing pulses."
       },
       "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
-        "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
+        "a": "Explanation 1",
+        "b": "Explanation 2: IGBT is turned- ON and OFF via Gate-to-emitter voltage pulses. Hence, it is a voltage controlled device.",
+        "c": "Explanation 3",
+        "d": "Explanation 4"
       },
       "correctAnswer": "b",
       "difficulty": "beginner"
@@ -144,10 +144,10 @@
         "d": "both positive and negative collector-to-emitter voltages."
       },
       "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
+        "a": "Explanation 1",
         "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
+        "c": "Explanation 3",
+        "d": "Explanation 4: IGBT blocks negative collector-to-emitter voltages (reverse biased) and positive collector-to-emitter voltages when gate voltage is not given (forward blocking)."
       },
       "correctAnswer": "d",
       "difficulty": "beginner"
