@@ -255,6 +255,11 @@ function toggleNextBtn() {
   let nextBtn = document.querySelector(".btn-next");
   nextBtn.classList.toggle("btn-deactive");
 }
+const cancelSpeech = () => {
+  window.speechSynthesis.cancel();
+  ccQueue = [];
+};
+
 const setIsProcessRunning = (value) => {
   // calling toggle the next
   if (value != isRunning) {
@@ -263,6 +268,7 @@ const setIsProcessRunning = (value) => {
 
   isRunning = value;
   if (value) {
+    cancelSpeech();
     Dom.hideAll();
   }
 };
@@ -280,7 +286,7 @@ const hide = (ele, disp = "none") => {
 const hideAll = (elesName, disp = "none") => {
   let eles = getAll(elesName);
   for (let ele of eles) {
-    hide(ele);
+    hide(ele)
   }
 };
 const showAll = (elesName, disp = "none", opa = 1) => {
@@ -305,13 +311,16 @@ let student_name = "";
 
 // ! text to audio
 
-const textToSpeach = (text) => {
-  // if(isMute){
-  //   return;
-  // }
+const textToSpeach = (text, speak = true) => {
+  // for filter <sub></sub>
+  text = text.replaceAll("<sub>", " ").replaceAll("</sub>", " ");
   let utterance = new SpeechSynthesisUtterance();
   utterance.text = text;
   utterance.voice = window.speechSynthesis.getVoices()[0];
+  if (isMute || !speak) {
+    utterance.volume = 0;
+    utterance.rate = 10;
+  }
   window.speechSynthesis.speak(utterance);
   return utterance;
 };
@@ -320,30 +329,26 @@ const textToSpeach = (text) => {
 let ccQueue = [];
 // for subtitile
 let ccObj = null;
-function setCC(text = null, speed = 25,typeText = true) {
+function setCC(text = null, speed = 25, speak = true) {
   if (ccObj != null) {
     ccObj.destroy();
   }
 
   let ccDom = get(".steps-subtitle .subtitle");
-  if(typeText){
-    ccQueue.push(text);
-    ccObj = new Typed(ccDom, {
-      strings: ["", ...ccQueue],
-      typeSpeed: speed,
-      onStringTyped() {
-        ccQueue.shift();
-        // if(ccQueue.length != 0){
-        //   setCC(ccQueue.shift())
-        // }
-      },
-    });
-  }
-  
-  if (!isMute) textToSpeach(text);
-  return ccDom;
+  ccQueue.push(text);
+  ccObj = new Typed(ccDom, {
+    strings: ["", ...ccQueue],
+    typeSpeed: speed,
+    onStringTyped() {
+      ccQueue.shift();
+      // if(ccQueue.length != 0){
+      //   setCC(ccQueue.shift())`
+      // }
+    },
+  });
+  let utterance = textToSpeach(text, speak);
+  return utterance;
 }
-
 // ! class Dom{} is send to seperate file
 // * for cursor pointer
 function cursorPointer(ele) {
@@ -351,7 +356,6 @@ function cursorPointer(ele) {
 }
 
 // Img.setBlinkArrow(true,790,444).play();
-
 
 const Scenes = {
   items: {
@@ -478,11 +482,11 @@ const Scenes = {
     part3_table_three: new Dom(".part3_table_three"),
     part3_table_four: new Dom(".part3_table_four"),
     part3_table_four_2: new Dom(".part3_table_four_2"),
-    
+
     slider_vIn: new Dom(".slider_vIn"),
     slider_vGs: new Dom(".slider_vGs"),
     slider_R: new Dom(".slider_R"),
-   
+
     btn_delete: new Dom(".btn-delete"),
     btn_reset: new Dom(".btn-reset"),
     btn_record: new Dom(".btn-record"),
@@ -502,15 +506,12 @@ const Scenes = {
     part_1_text_for_crrct: new Dom("part_1_text_for_crrct"),
     part_1_text_for_wrong: new Dom("part_1_text_for_wrong"),
 
-
     // !EE4 images added
 
-
- 
     //! EE4 tables added
     part_1_table_1: new Dom(".part_1_table_1"),
     part_1_table_2: new Dom(".part_1_table_2"),
-    
+
     part_1_table_1_col_1: new Dom(".part_1_table_1_col_1"),
     part_1_table_1_col_2: new Dom(".part_1_table_1_col_2"),
     part_1_table_1_col_3: new Dom(".part_1_table_1_col_3"),
@@ -519,7 +520,7 @@ const Scenes = {
     part_1_table_1_col_6: new Dom(".part_1_table_1_col_6"),
     part_1_table_1_col_7: new Dom(".part_1_table_1_col_7"),
     part_1_table_1_col_8: new Dom(".part_1_table_1_col_8"),
-    
+
     part_1_table_2_col_1: new Dom(".part_1_table_2_col_1"),
     part_1_table_2_col_2: new Dom(".part_1_table_2_col_2"),
     part_1_table_2_col_3: new Dom(".part_1_table_2_col_3"),
@@ -530,32 +531,24 @@ const Scenes = {
     part_1_table_2_col_9: new Dom(".part_1_table_2_col_9"),
     part_1_table_2_col_10: new Dom(".part_1_table_2_col_10"),
     // ! new items dom
-    
+
     //part 2 cable added
-    
-    
-    
+
     //* connection box table
     part_2_connections_box: new Dom(".part_2_connections_box"),
     part_1_1_connections_box: new Dom(".part_1_1_connections_box"),
     part_1_2_connections_box: new Dom(".part_1_2_connections_box"),
-    
-    //new images added for part1 
-    
-    
+
+    //new images added for part1
+
     // part2 calculation
-    
-    
-    
+
     //* 29 feb new imgs
-    
-    
+
     //* part3 images added
-    
-    
-    
-    // * useful images from previous Experiment 
-    
+
+    // * useful images from previous Experiment
+
     btn_connections: new Dom("btn_connections"),
     btn_connectons_completed: new Dom("btn_connectons_completed"),
     btn_instructions: new Dom("btn_instructions"),
@@ -572,80 +565,92 @@ const Scenes = {
     part_1_slide_3_compo_2_on: new Dom("part_1_slide_3_compo_2_on"),
     part_1_slide_3_compo_2_text: new Dom("part_1_slide_3_compo_2_text"),
     part_1_incomplete_connection: new Dom("part_1_incomplete_connection"),
-    part_2_conncection_supply_1_red_button : new Dom("part_2_conncection_supply_1_red_button"),
-    part_2_conncection_supply_2_red_button : new Dom("part_2_conncection_supply_2_red_button"),
+    part_2_conncection_supply_1_red_button: new Dom(
+      "part_2_conncection_supply_1_red_button"
+    ),
+    part_2_conncection_supply_2_red_button: new Dom(
+      "part_2_conncection_supply_2_red_button"
+    ),
     niddle_vGs: new Dom("niddle_vGs"),
     niddle_vIn: new Dom("niddle_vIn"),
 
-    
-      // * for PROCEDURE and instruction NOMENCLATURE
+    // * for PROCEDURE and instruction NOMENCLATURE
 
+    //*EE6 images added
 
+    btn_begin_experiment: new Dom("btn_begin_experiment"),
+    btn_conclusion: new Dom("btn_conclusion"),
+    btn_connection_completed: new Dom("btn_connection_completed"),
+    btn_make_connection: new Dom("btn_make_connection"),
+    btn_plot: new Dom("btn_plot"),
+    btn_procedure: new Dom("btn_procedure"),
+    component_1_on_text: new Dom("component_1_on_text"),
+    component_2_on_text: new Dom("component_2_on_text"),
+    part_1_1_cable_a2: new Dom("part_1_1_cable_a2"),
+    part_1_1_cable_e: new Dom("part_1_1_cable_e"),
+    part_1_1_cable_n2: new Dom("part_1_1_cable_n2"),
+    part_1_1_cable_p1: new Dom("part_1_1_cable_p1"),
+    part_1_1_cable_p2: new Dom("part_1_1_cable_p2"),
+    part_1_1_cable_r2: new Dom("part_1_1_cable_r2"),
+    part_1_1_cable_v1: new Dom("part_1_1_cable_v1"),
+    part_1_1_cable_v2: new Dom("part_1_1_cable_v2"),
+    part_1_1_calculations: new Dom("part_1_1_calculations"),
+    part_1_1_components: new Dom("part_1_1_components"),
+    part_1_1_conclusion_box: new Dom("part_1_1_conclusion_box"),
+    part_1_1_instruction_box: new Dom("part_1_1_instruction_box"),
+    part_1_1_nomenclature_box: new Dom("part_1_1_nomenclature_box"),
+    part_1_1_procedure_box: new Dom("part_1_1_procedure_box"),
+    part_1_2_cable_a1: new Dom("part_1_2_cable_a1"),
+    part_1_2_cable_cp: new Dom("part_1_2_cable_cp"),
+    part_1_2_cable_dvp: new Dom("part_1_2_cable_dvp"),
+    part_1_2_cable_e: new Dom("part_1_2_cable_e"),
+    part_1_2_cable_n2: new Dom("part_1_2_cable_n2"),
+    part_1_2_cable_p1: new Dom("part_1_2_cable_p1"),
+    part_1_2_cable_p2: new Dom("part_1_2_cable_p2"),
+    part_1_2_cable_r2: new Dom("part_1_2_cable_r2"),
+    part_1_2_cable_v1: new Dom("part_1_2_cable_v1"),
+    part_1_2_cable_v2: new Dom("part_1_2_cable_v2"),
+    part_1_2_calculations: new Dom("part_1_2_calculations"),
+    part_1_2_components: new Dom("part_1_2_components"),
+    part_1_2_conclusion_box: new Dom("part_1_2_conclusion_box"),
+    part_1_2_instruction_box: new Dom("part_1_2_instruction_box"),
+    part_1_2_nomenclature_box: new Dom("part_1_2_nomenclature_box"),
+    part_1_2_procedure_box: new Dom("part_1_2_procedure_box"),
+    part_2_cable_a2: new Dom("part_2_cable_a2"),
+    part_2_cable_e: new Dom("part_2_cable_e"),
+    part_2_cable_n2: new Dom("part_2_cable_n2"),
+    part_2_cable_p1: new Dom("part_2_cable_p1"),
+    part_2_cable_p2: new Dom("part_2_cable_p2"),
+    part_2_cable_r2: new Dom("part_2_cable_r2"),
+    part_2_cable_v1: new Dom("part_2_cable_v1"),
+    part_2_cable_v2: new Dom("part_2_cable_v2"),
+    part_2_cable_vg1: new Dom("part_2_cable_vg1"),
+    part_2_cable_vg2: new Dom("part_2_cable_vg2"),
+    part_2_calculations: new Dom("part_2_calculations"),
+    part_2_components: new Dom("part_2_components"),
+    part_2_conclusion_box: new Dom("part_2_conclusion_box"),
+    part_2_nomenclature_box: new Dom("part_2_nomenclature_box"),
+    part_2_procedure_box: new Dom("part_2_procedure_box"),
+    select_option_1_1: new Dom("select_option_1_1"),
+    select_option_1_2: new Dom("select_option_1_2"),
+    select_option_2: new Dom("select_option_2"),
+    select_option_full: new Dom("select_option_full"),
+    slider_thumb: new Dom("slider_thumb"),
+    part_2_instruction_box: new Dom("part_2_instruction_box"),
+    btn_procedure_calculations: new Dom("btn_procedure_calculations"),
 
-        //*EE6 images added
+    //! Experimental section images added
 
-        btn_begin_experiment : new Dom("btn_begin_experiment"),
-        btn_conclusion : new Dom("btn_conclusion"),
-        btn_connection_completed : new Dom("btn_connection_completed"),
-        btn_make_connection : new Dom("btn_make_connection"),
-        btn_plot : new Dom("btn_plot"),
-        btn_procedure : new Dom("btn_procedure"),
-        component_1_on_text : new Dom("component_1_on_text"),
-        component_2_on_text : new Dom("component_2_on_text"),
-        part_1_1_cable_a2 : new Dom("part_1_1_cable_a2"),
-        part_1_1_cable_e : new Dom("part_1_1_cable_e"),
-        part_1_1_cable_n2 : new Dom("part_1_1_cable_n2"),
-        part_1_1_cable_p1 : new Dom("part_1_1_cable_p1"),
-        part_1_1_cable_p2 : new Dom("part_1_1_cable_p2"),
-        part_1_1_cable_r2 : new Dom("part_1_1_cable_r2"),
-        part_1_1_cable_v1 : new Dom("part_1_1_cable_v1"),
-        part_1_1_cable_v2 : new Dom("part_1_1_cable_v2"),
-        part_1_1_calculations : new Dom("part_1_1_calculations"),
-        part_1_1_components : new Dom("part_1_1_components"),
-        part_1_1_conclusion_box : new Dom("part_1_1_conclusion_box"),
-        part_1_1_instruction_box : new Dom("part_1_1_instruction_box"),
-        part_1_1_nomenclature_box : new Dom("part_1_1_nomenclature_box"),
-        part_1_1_procedure_box : new Dom("part_1_1_procedure_box"),
-        part_1_2_cable_a1 : new Dom("part_1_2_cable_a1"),
-        part_1_2_cable_cp : new Dom("part_1_2_cable_cp"),
-        part_1_2_cable_dvp : new Dom("part_1_2_cable_dvp"),
-        part_1_2_cable_e : new Dom("part_1_2_cable_e"),
-        part_1_2_cable_n2 : new Dom("part_1_2_cable_n2"),
-        part_1_2_cable_p1 : new Dom("part_1_2_cable_p1"),
-        part_1_2_cable_p2 : new Dom("part_1_2_cable_p2"),
-        part_1_2_cable_r2 : new Dom("part_1_2_cable_r2"),
-        part_1_2_cable_v1 : new Dom("part_1_2_cable_v1"),
-        part_1_2_cable_v2 : new Dom("part_1_2_cable_v2"),
-        part_1_2_calculations : new Dom("part_1_2_calculations"),
-        part_1_2_components : new Dom("part_1_2_components"),
-        part_1_2_conclusion_box : new Dom("part_1_2_conclusion_box"),
-        part_1_2_instruction_box : new Dom("part_1_2_instruction_box"),
-        part_1_2_nomenclature_box : new Dom("part_1_2_nomenclature_box"),
-        part_1_2_procedure_box : new Dom("part_1_2_procedure_box"),
-        part_2_cable_a2 : new Dom("part_2_cable_a2"),
-        part_2_cable_e : new Dom("part_2_cable_e"),
-        part_2_cable_n2 : new Dom("part_2_cable_n2"),
-        part_2_cable_p1 : new Dom("part_2_cable_p1"),
-        part_2_cable_p2 : new Dom("part_2_cable_p2"),
-        part_2_cable_r2 : new Dom("part_2_cable_r2"),
-        part_2_cable_v1 : new Dom("part_2_cable_v1"),
-        part_2_cable_v2 : new Dom("part_2_cable_v2"),
-        part_2_cable_vg1 : new Dom("part_2_cable_vg1"),
-        part_2_cable_vg2 : new Dom("part_2_cable_vg2"),
-        part_2_calculations : new Dom("part_2_calculations"),
-        part_2_components : new Dom("part_2_components"),
-        part_2_conclusion_box : new Dom("part_2_conclusion_box"),
-        part_2_nomenclature_box : new Dom("part_2_nomenclature_box"),
-        part_2_procedure_box : new Dom("part_2_procedure_box"),
-        select_option_1_1 : new Dom("select_option_1_1"),
-        select_option_1_2 : new Dom("select_option_1_2"),
-        select_option_2 : new Dom("select_option_2"),
-        select_option_full : new Dom("select_option_full"),
-        slider_thumb : new Dom("slider_thumb"),
-        part_2_instruction_box : new Dom("part_2_instruction_box"),
-        btn_procedure_calculations : new Dom("btn_procedure_calculations"),
-    
-
+    btn_1: new Dom("btn_1"),
+    btn_2: new Dom("btn_2"),
+    btn_click: new Dom("btn_click"),
+    circle: new Dom("circle"),
+    frame_1: new Dom("frame_1"),
+    frame_2: new Dom("frame_2"),
+    frame_3: new Dom("frame_3"),
+    menu_page: new Dom("menu_page"),
+    val_vgs: new Dom("val_vgs"),
+    val_vin: new Dom("val_vin"),
 
     domQs1: new Dom("domQs1"),
     domQs2: new Dom("domQs2"),
@@ -704,7 +709,7 @@ const Scenes = {
     xLabel = null,
     yLabel = null,
     beginAtZero = false,
-    startEmpty = false,
+    startEmpty = false
   ) {
     // for label
     Scenes.items.yLabel.set(504, 263).setContent(yLabel).styles({
@@ -728,7 +733,7 @@ const Scenes = {
       graphRef.destroy();
     }
 
-    // temprory dataset 
+    // temprory dataset
     let datasets = [
       {
         label: dataLabel,
@@ -738,10 +743,10 @@ const Scenes = {
         data: data,
         display: false,
       },
-    ]
+    ];
 
-    if(startEmpty){
-        datasets=[]
+    if (startEmpty) {
+      datasets = [];
     }
 
     graphRef = new Chart(ctx, {
@@ -763,7 +768,7 @@ const Scenes = {
         },
       ],
       data: {
-        datasets: datasets
+        datasets: datasets,
       },
       options: {
         responsive: true,
@@ -804,7 +809,7 @@ const Scenes = {
     });
 
     Scenes.items.chart[graphIdx] = graphRef;
-    return graphRef
+    return graphRef;
   },
 
   // for adding new datasets to graph
@@ -828,9 +833,9 @@ const Scenes = {
       }
       chart.update();
     },
-    getSizeOfDatasets(chart){
-      return chart.data.datasets.length
-    }
+    getSizeOfDatasets(chart) {
+      return chart.data.datasets.length;
+    },
   },
   deleteAll() {
     for (i in this.img) {
@@ -855,145 +860,181 @@ const Scenes = {
   incCurrentSubStep() {
     this.subCurrentStep++;
   },
-  setStepHeading(step, description,hide) {
+  setStepHeading(step, description, hide) {
     Scenes.items.stepTitle.setContent(step);
     Scenes.items.stepDescription.setContent(description);
     Scenes.items.stepHeading.show("flex").push();
-    if(hide){
-      let st={
-        visibility: "hidden"
-      }
-      Scenes.items.stepTitle.styles(st)
-      Scenes.items.stepDescription.styles(st)
+    if (hide) {
+      let st = {
+        visibility: "hidden",
+      };
+      Scenes.items.stepTitle.styles(st);
+      Scenes.items.stepDescription.styles(st);
     }
   },
 
   //* for hover on instuction , procedure and nomenclature
 
   // not done yet
-  popupImgHoverdConclusion:[false,false,false],
-  showPopup(step){
-
-    let instructionBtn = Scenes.items.btn_instructions.zIndex(100)
-    let procedureBtn = Scenes.items.btn_procedure_calculations.zIndex(100)
-    let nomenclatureBtn = Scenes.items.btn_nomenclature.zIndex(100)
-    let conclusionBtn = Scenes.items.btn_conclusion.zIndex(100)
+  popupImgHoverdConclusion: [false, false, false],
+  showPopup(step) {
+    let instructionBtn = Scenes.items.btn_instructions.zIndex(100);
+    let procedureBtn = Scenes.items.btn_procedure_calculations.zIndex(100);
+    let nomenclatureBtn = Scenes.items.btn_nomenclature.zIndex(100);
+    let conclusionBtn = Scenes.items.btn_conclusion.zIndex(100);
     let instructionImg, procedureImg, nomenclatureImg, conclusionImg;
 
-    let imgs = [
-      instructionImg,
-      procedureImg,
-      nomenclatureImg,
-      conclusionImg
-    ]
-    
-    let btn = [
-      instructionBtn, 
-      procedureBtn,
-      nomenclatureBtn,
-      conclusionBtn,
-    ]
+    let imgs = [instructionImg, procedureImg, nomenclatureImg, conclusionImg];
 
-    let speakConclusion = null
-    let calledFor = -1 // index of conclusion btn
+    let btn = [instructionBtn, procedureBtn, nomenclatureBtn, conclusionBtn];
 
-    switch(step){
-      case "1_1" : 
-        instructionImg = Scenes.items.part_1_1_instruction_box.set(-242,-329,800).zIndex(50).hide()
-        procedureImg = Scenes.items.part_1_1_procedure_box.set(-150,-500).zIndex(50).hide()
-        nomenclatureImg = Scenes.items.part_1_1_nomenclature_box.set(-374,null,800).zIndex(50).hide()
-        conclusionImg = Scenes.items.part_1_1_conclusion_box.set(null,-140,600).zIndex(50).hide()
-        speakConclusion = ()=>{
-          setCC("From these experiments and the plots it is clear that, Since IGBT is a voltage controlled device, by changing the gate-to-emitter voltage, the output characteristics were generated. These characteristics clearly display three operating regions of IGBT which are cutoff, linear and saturation.",25,false)
-        }
-        calledFor = 0
+    let speakConclusion = null;
+    let calledFor = -1; // index of conclusion btn
+
+    switch (step) {
+      case "1_1":
+        instructionImg = Scenes.items.part_1_1_instruction_box
+          .set(-242, -329, 800)
+          .zIndex(50)
+          .hide();
+        procedureImg = Scenes.items.part_1_1_procedure_box
+          .set(-150, -500)
+          .zIndex(50)
+          .hide();
+        nomenclatureImg = Scenes.items.part_1_1_nomenclature_box
+          .set(-374, null, 800)
+          .zIndex(50)
+          .hide();
+        conclusionImg = Scenes.items.part_1_1_conclusion_box
+          .set(null, -140, 600)
+          .zIndex(50)
+          .hide();
+        speakConclusion = () => {
+          setCC(
+            "From these experiments and the plots it is clear that, Since IGBT is a voltage controlled device, by changing the gate-to-emitter voltage,",
+            25
+          );
+          setCC(
+            " the output characteristics were generated. These characteristics clearly display three operating regions of IGBT which are cutoff, linear and saturation.",
+            25
+          );
+        };
+        calledFor = 0;
         break;
 
-      case "1_2" :  
-        instructionImg = Scenes.items.part_1_2_instruction_box.set(-135,-46,500).hide().zIndex(50)
-        procedureImg = Scenes.items.part_1_2_procedure_box.set(-100,80,500).hide().zIndex(50)
-        nomenclatureImg = Scenes.items.part_1_2_nomenclature_box.set(-100,0,400).hide().zIndex(50)
-        conclusionImg = Scenes.items.part_1_1_conclusion_box.set(10,5,700).hide().zIndex(50)
-        speakConclusion = ()=>{
-          setCC("From these experiments and the plots it is clear that, Since IGBT is a voltage controlled device, by changing the gate-to-emitter voltage, the output characteristics were generated. These characteristics clearly display three operating regions of IGBT which are cutoff, linear and saturation.",25,false)
-        }
-        calledFor = 1
+      case "1_2":
+        instructionImg = Scenes.items.part_1_2_instruction_box
+          .set(-135, -46, 500)
+          .hide()
+          .zIndex(50);
+        procedureImg = Scenes.items.part_1_2_procedure_box
+          .set(-100, 80, 500)
+          .hide()
+          .zIndex(50);
+        nomenclatureImg = Scenes.items.part_1_2_nomenclature_box
+          .set(-100, 0, 400)
+          .hide()
+          .zIndex(50);
+        conclusionImg = Scenes.items.part_1_1_conclusion_box
+          .set(10, 5, 700)
+          .hide()
+          .zIndex(50);
+        speakConclusion = () => {
+          setCC(
+            "From these experiments and the plots it is clear that, Since IGBT is a voltage controlled device, by changing the gate-to-emitter voltage,",
+            25
+          );
+          setCC(
+            "the output characteristics were generated. These characteristics clearly display three operating regions of IGBT which are cutoff, linear and saturation.",
+            25
+          );
+        };
+        calledFor = 1;
         break;
 
-      case "2" :  
-        instructionImg = Scenes.items.part_2_instruction_box.set(-135,-46,500).hide().zIndex(50)
-        procedureImg = Scenes.items.part_2_procedure_box.set(-80,-100,500).hide().zIndex(50)
-        nomenclatureImg = Scenes.items.part_2_nomenclature_box.set(-100,0,500).hide().zIndex(50)
-        conclusionImg = Scenes.items.part_1_1_conclusion_box.set(10,-10,700).hide().zIndex(50)
-        speakConclusion = ()=>{
-          setCC("From these experiments and the plots it is clear that, In IGBT, the collector current increases with increasing gate-to-emitter voltage.")
-        }
-        calledFor = 2
+      case "2":
+        instructionImg = Scenes.items.part_2_instruction_box
+          .set(-135, -46, 500)
+          .hide()
+          .zIndex(50);
+        procedureImg = Scenes.items.part_2_procedure_box
+          .set(-80, -100, 500)
+          .hide()
+          .zIndex(50);
+        nomenclatureImg = Scenes.items.part_2_nomenclature_box
+          .set(-100, 0, 500)
+          .hide()
+          .zIndex(50);
+        conclusionImg = Scenes.items.part_1_1_conclusion_box
+          .set(10, -10, 700)
+          .hide()
+          .zIndex(50);
+        speakConclusion = () => {
+          setCC(
+            "From these experiments and the plots it is clear that, In IGBT, the collector current increases with increasing gate-to-emitter voltage."
+          );
+        };
+        calledFor = 2;
         break;
     }
 
-    
+    let showInstructionImg = function () {
+      instructionImg.show().zIndex(40);
+    };
 
-    let showInstructionImg = function(){
-      instructionImg.show().zIndex(40)
-    }
+    let showProcedureImg = function () {
+      procedureImg.show().zIndex(40);
+    };
 
-    let showProcedureImg = function(){
-      procedureImg.show().zIndex(40)
-    }
-
-    let showNomenclatureImg = function(){
-      nomenclatureImg.show().zIndex(40)
-    }
-    let showConclusionImg = function(){
+    let showNomenclatureImg = function () {
+      nomenclatureImg.show().zIndex(40);
+    };
+    let showConclusionImg = function () {
       // Dom.setBlinkArrowRed(-1)
-      conclusionImg.show().zIndex(40)
-      if(!Scenes.popupImgHoverdConclusion[calledFor]){
-        speakConclusion()
-        Scenes.popupImgHoverdConclusion[calledFor] = true
-        setTimeout(()=>{
+      conclusionImg.show().zIndex(40);
+      if (!Scenes.popupImgHoverdConclusion[calledFor]) {
+        speakConclusion();
+        Scenes.popupImgHoverdConclusion[calledFor] = true;
+        setTimeout(() => {
           Dom.setBlinkArrow(true, 790, 544).play();
-          Dom.setBlinkArrowRed(-1)
+          Dom.setBlinkArrowRed(-1);
           setCC("Click 'Next' to go to next step");
           setIsProcessRunning(false);
-        },25000)
+        }, 25000);
       }
-    }
-    
-    let hideInstructionImg = function(){
-      instructionImg.hide()
-    }
+    };
 
-    let hideProcedureImg = function(){
-      procedureImg.hide()
-    }
+    let hideInstructionImg = function () {
+      instructionImg.hide();
+    };
 
-    let hideNomenclatureImg = function(){
-      nomenclatureImg.hide()
+    let hideProcedureImg = function () {
+      procedureImg.hide();
+    };
 
-    }
-    let hideConclusionImg = function(){
-      conclusionImg.hide()
+    let hideNomenclatureImg = function () {
+      nomenclatureImg.hide();
+    };
+    let hideConclusionImg = function () {
+      conclusionImg.hide();
+    };
 
-    }
-    
+    btn[0].item.onmouseover = showInstructionImg;
+    btn[0].item.onmouseout = hideInstructionImg;
 
-    btn[0].item.onmouseover = showInstructionImg
-    btn[0].item.onmouseout = hideInstructionImg
+    btn[1].item.onmouseover = showProcedureImg;
+    btn[1].item.onmouseout = hideProcedureImg;
 
-    btn[1].item.onmouseover = showProcedureImg
-    btn[1].item.onmouseout = hideProcedureImg
+    btn[2].item.onmouseover = showNomenclatureImg;
+    btn[2].item.onmouseout = hideNomenclatureImg;
 
-    btn[2].item.onmouseover = showNomenclatureImg
-    btn[2].item.onmouseout = hideNomenclatureImg
-    
-    btn[3].item.onmouseover = showConclusionImg
-    btn[3].item.onmouseout = hideConclusionImg
+    btn[3].item.onmouseover = showConclusionImg;
+    btn[3].item.onmouseout = hideConclusionImg;
   },
   // for typing hello text
   intru: null,
   intruVoice: null,
-  optionsDone: [0, 0, 0, 0],
+  optionsDone: [0, 0, 0],
   steps: [
     (intro = () => {
       // remove all dom element for back and setProcessRunning
@@ -1083,55 +1124,60 @@ const Scenes = {
       Dom.hideAll();
 
       // require
-      let btn_transparent = Scenes.items.btn_transparent.set().zIndex(6000).item;
+      let btn_transparent = Scenes.items.btn_transparent
+        .set()
+        .zIndex(6000).item;
 
       Scenes.items.concept_development.set().styles({
         zIndex: "5000",
         scale: "1.07 0.906",
         top: "-143px",
         position: "absolute",
-      })
+      });
 
       // ! Slide ended enable the button next button
-      function checkIsSlideEnded(){
-        let isSlideEnded = localStorage.getItem("isSlideEnded")
-        if(isSlideEnded=="true"){
-          btn_transparent.disabled = false
-          setIsProcessRunning(false)
-          btn_transparent.classList.remove("btn-disabled")
+      function checkIsSlideEnded() {
+        let isSlideEnded = localStorage.getItem("isSlideEnded");
+        if (isSlideEnded == "true") {
+          btn_transparent.disabled = false;
+          setIsProcessRunning(false);
+          btn_transparent.classList.remove("btn-disabled");
           // setCC("Click next to goto next slide.")
-          Dom.setBlinkArrowRed(true, 866, 420,30,null,-90).play();
-          btn_transparent.onclick = ()=>{
-            Scenes.next()
-            localStorage.setItem("isSlideEnded",false)
-            window.clearInterval(interval)
-          }
+          Dom.setBlinkArrowRed(true, 866, 420, 30, null, -90).play();
+          btn_transparent.onclick = () => {
+            Scenes.next();
+            nextDrawerItem();
+            nextProgressBar();
+            localStorage.setItem("isSlideEnded", false);
+            window.clearInterval(interval);
+          };
         }
       }
-      var interval = window.setInterval(checkIsSlideEnded, 1000)
+      var interval = window.setInterval(checkIsSlideEnded, 1000);
 
       return true;
     }),
     //! EE6 step 1
     (step1 = function () {
-      Scenes.items.btn_next.show();
-
+      
       // todo all previous elements hide
+      Scenes.items.btn_next.hide();
+      speechSynthesis.cancel()
       Dom.hideAll();
+      // setIsProcessRunning(true)
       Scenes.items.contentAdderBox.item.innerHTML = "";
 
       Scenes.setStepHeading("Step-1", "To Plot Different Characteristics.");
-      setCC("Here all possible schemes for characteristics generation of IGBT are displayed. Click on the relevant characteristics that you want to perform experiment for.")
+      
 
       // * remove all previous restrictions
 
       //! * Required Elements
 
       Scenes.items.select_option_full.set(40, -20, 404, 850);
-      Scenes.items.select_option_1_1.set(680-45, -18, 70, 260).zIndex(1);
-      Scenes.items.select_option_1_2.set(675-45, 175-23, 70, 270).zIndex(1);
-      Scenes.items.select_option_2.set(372,215,175, 260).zIndex(1);
-  
+      Scenes.items.select_option_1_1.set(680 - 45, -18, 70, 260).zIndex(1);
+      Scenes.items.select_option_1_2.set(675 - 45, 175 - 23, 70, 270).zIndex(1);
+      Scenes.items.select_option_2.set(372, 215, 175, 260).zIndex(1);
 
       // ! onclicks for all options
       let options = [
@@ -1155,28 +1201,28 @@ const Scenes = {
       const opOne = () => {
         Scenes.optionsDone[0] = 1;
         Scenes.forMathematicalExpressionBtn = 1;
-        Scenes.currentStep = 3
-        Scenes.next()
-      }
+        Scenes.currentStep = 3;
+        Scenes.next();
+      };
       const opTwo = () => {
         Scenes.optionsDone[1] = 1;
         Scenes.forMathematicalExpressionBtn = 2;
-        Scenes.currentStep = 4
-        Scenes.next()
-      }
+        Scenes.currentStep = 4;
+        Scenes.next();
+      };
       const opThree = () => {
         Scenes.optionsDone[2] = 1;
         Scenes.forMathematicalExpressionBtn = 3;
-        Scenes.currentStep = 5
-        Scenes.next()
-      }
-     
+        Scenes.currentStep = 5;
+        Scenes.next();
+      };
+
       options[0].item.onclick = opOne;
       options[1].item.onclick = opTwo;
       options[2].item.onclick = opThree;
 
       // ! if all options done then exit
-      let exit = true
+      let exit = true;
       for (let i of Scenes.optionsDone) {
         if (i == 0) {
           exit = false;
@@ -1186,22 +1232,29 @@ const Scenes = {
 
       if (exit) {
         // after complete
-        // Dom.setBlinkArrow(true, 790, 408).play();
-        setCC("Simulation Done");
+        
+        Scenes.items.btn_next.show();
+        Dom.setBlinkArrow(true, 790, 418).play();
+        setCC("Click 'Next' to go to next step");
+        Scenes.currentStep = 5
         setIsProcessRunning(false);
+        return true
       }
 
-      return false;
+      setCC(
+        "Here all possible schemes for characteristics generation of IGBT are displayed. Click on the relevant characteristics that you want to perform experiment for."
+      );
+
+      return true;
     }),
-  
     (step2 = function () {
       setIsProcessRunning(true);
 
-      Scenes.setStepHeading("", "using meteres",true);
+      Scenes.setStepHeading("", "using meteres", true);
       Scenes.items.btn_next.show();
       // ! Step Connection
 
-      // required elements 
+      // required elements
       let btns = [
         Scenes.items.btn_instructions.set(750 + 40, 190, 50).zIndex(10),
         Scenes.items.btn_make_connection.set(750 + 40, 190 + 55, 50).zIndex(10),
@@ -1211,263 +1264,289 @@ const Scenes = {
         Scenes.items.btn_begin_experiment
           .set(750 + 40, 190 + 165, 50, 147)
           .zIndex(10),
-        Scenes.items.btn_reset.set(660, 190 + 165, 40).zIndex(10)
-      ]
+        Scenes.items.btn_reset.set(809, 144, 41, 112).zIndex(10),
+      ];
 
       // required images
       let images = [
-        Scenes.items.part_1_1_components.set(0,-70,495,975).zIndex(1),
-        Scenes.items.part_2_conncection_supply_1_red_button.set(171,79,28,25).zIndex(10),
-        Scenes.items.part_2_conncection_supply_2_red_button.set(178,315,29,25).zIndex(10),
+        Scenes.items.part_1_1_components.set(0, -70, 495, 975).zIndex(1),
+        Scenes.items.part_2_conncection_supply_1_red_button
+          .set(171, 79, 28, 25)
+          .zIndex(10),
+        Scenes.items.part_2_conncection_supply_2_red_button
+          .set(178, 315, 29, 25)
+          .zIndex(10),
         Scenes.items.part_1_1_connections_box,
-      ]
+      ];
 
       let cables = [
-        Scenes.items.part_1_1_cable_p1.set(0,0).zIndex(2).hide(),
-        Scenes.items.part_1_1_cable_e.set(0,0).zIndex(3).hide(),
-        Scenes.items.part_1_1_cable_a2.set(0,0).zIndex(4).hide(),
-        Scenes.items.part_1_1_cable_r2.set(0,0).zIndex(5).hide(),
-        Scenes.items.part_1_1_cable_p2.set(0,0).zIndex(6).hide(),
-        Scenes.items.part_1_1_cable_n2.set(0,0).zIndex(7).hide(),
-        Scenes.items.part_1_1_cable_v1.set(0,0).zIndex(8).hide(),
-        Scenes.items.part_1_1_cable_v2.set(0,0).zIndex(9).hide(),
-      ]
+        Scenes.items.part_1_1_cable_p1.set(0, 0).zIndex(2).hide(),
+        Scenes.items.part_1_1_cable_e.set(0, 0).zIndex(3).hide(),
+        Scenes.items.part_1_1_cable_a2.set(0, 0).zIndex(4).hide(),
+        Scenes.items.part_1_1_cable_r2.set(0, 0).zIndex(5).hide(),
+        Scenes.items.part_1_1_cable_p2.set(0, 0).zIndex(6).hide(),
+        Scenes.items.part_1_1_cable_n2.set(0, 0).zIndex(7).hide(),
+        Scenes.items.part_1_1_cable_v1.set(0, 0).zIndex(8).hide(),
+        Scenes.items.part_1_1_cable_v2.set(0, 0).zIndex(9).hide(),
+      ];
 
       // ! for increasing the size
-      let l = 0,t = -70, h = 495, w = 975 
-      Scenes.items.part_1_1_components.set(l,t,h,w).zIndex(1)
-      cables.forEach(ele=>{
-        ele.set(l,t,h,w).hide()
-      })
+      let l = 0,
+        t = -70,
+        h = 495,
+        w = 975;
+      Scenes.items.part_1_1_components.set(l, t, h, w).zIndex(1);
+      cables.forEach((ele) => {
+        ele.set(l, t, h, w).hide();
+      });
 
       let cables_color = [
-      // meters
-          "#e60404", 
-          "#243d6a", 
-          "#0bc45e",
-          "#828282", 
-          "#e4ad07", 
-          "#202020", 
-          "#c33a64", 
-          "#4a004a", 
-      ]
+        // meters
+        "#e60404",
+        "#243d6a",
+        "#0bc45e",
+        "#828282",
+        "#e4ad07",
+        "#202020",
+        "#c33a64",
+        "#4a004a",
+      ];
 
-
-      function hideConnectionStepImgs(){
-        let allImages = [
-          ...btns,...images,...cables
-        ]
-        allImages.forEach(ele=>{
-          ele.hide()
-        })
-        Dom.setBlinkArrowRed(-1)
+      function hideConnectionStepImgs() {
+        let allImages = [...btns, ...images, ...cables];
+        allImages.forEach((ele) => {
+          ele.hide();
+        });
+        Dom.setBlinkArrowRed(-1);
       }
-
 
       //! Connection Part
       // to enable startExp Button
-      let partConnectionsIsComplete = false
-      function partConnections(){
-         // Connection Logic
-        Scenes.items.part_1_1_connections_box.set(514,-70).hide()
+      let partConnectionsIsComplete = false;
+      function partConnections() {
+        // Connection Logic
+        Scenes.items.part_1_1_connections_box.set(514, -70).hide();
 
         // ! btn_reset onclick
-        Scenes.items.btn_reset.item.onclick = ()=>{
-          let box_buttons_reset = document.querySelectorAll(".part_1_1_connections_box button")
+        Scenes.items.btn_reset.item.onclick = () => {
+          let box_buttons_reset = document.querySelectorAll(
+            ".part_1_1_connections_box button"
+          );
           let temps = {
             textShadow: "none",
             color: "black",
-            backgroundColor: "transparent"
-          }
-          box_buttons_reset.forEach(ele=>{
-            let ele_Dom = new Dom(ele)
-            ele_Dom.styles(temps)
-          })
-          Scenes.steps[3]()
-        }
+            backgroundColor: "transparent",
+          };
+          box_buttons_reset.forEach((ele) => {
+            let ele_Dom = new Dom(ele);
+            ele_Dom.styles(temps);
+          });
+          Scenes.steps[3]();
+        };
 
         //! connection box onclick
-        Scenes.items.btn_make_connection.item.onclick = ()=>{
-          Scenes.items.part_1_1_connections_box.show("flex")
+        Scenes.items.btn_make_connection.item.onclick = () => {
+          Scenes.items.part_1_1_connections_box.show("flex");
           // ! connection table arrow move
-          Dom.setBlinkArrowRed(true,580,5,35,null,90).play()
-          setCC("")
-        }
-        let box_buttons = document.querySelectorAll(".part_1_1_connections_box button")
+          Dom.setBlinkArrowRed(true, 580, 5, 35, null, 90).play();
+          setCC("");
+        };
+        let box_buttons = document.querySelectorAll(
+          ".part_1_1_connections_box button"
+        );
 
         //! connection box onclick
-        let btnClickedCount = 0
-        let connectionBtnArrow = 580
-        let arrowLeftGap = 46
-        box_buttons.forEach((ele,i)=>{
-          ele.onclick = ()=>{
+        let btnClickedCount = 0;
+        let connectionBtnArrow = 580;
+        let arrowLeftGap = 46;
+        box_buttons.forEach((ele, i) => {
+          ele.onclick = () => {
             // increasing count of complete connection
-            if(ele.style.color!="white"){
-              btnClickedCount++
-              //! move arrow 
-              connectionBtnArrow += arrowLeftGap
-              Dom.setBlinkArrowRed(true,connectionBtnArrow,5,35,null,90).play()
-              
-              if(btnClickedCount==8){
-                Dom.setBlinkArrowRed(true,745,305,35,null,180).play()
-                setCC("Click on 'Connections Completed'")
+            if (ele.style.color != "white") {
+              btnClickedCount++;
+              //! move arrow
+              connectionBtnArrow += arrowLeftGap;
+              Dom.setBlinkArrowRed(
+                true,
+                connectionBtnArrow,
+                5,
+                35,
+                null,
+                90
+              ).play();
 
-                Scenes.items.btn_connections.item.onclick = ()=>{}
+              if (btnClickedCount == 8) {
+                Dom.setBlinkArrowRed(true, 745, 305, 35, null, 180).play();
+                setCC("Click on 'Connections Completed'");
+
+                Scenes.items.btn_connections.item.onclick = () => {};
               }
             }
-            
-            cables[i].show()
-            ele.style.backgroundColor = cables_color[i]
-            ele.style.color = "white"
-            ele.style.textShadow = "1px 1px black"
-          }
-        })
 
-        Dom.setBlinkArrowRed(true,745,250,35,null,180).play()
-        setCC("Click on 'Make Connections'")
+            cables[i].show();
+            ele.style.backgroundColor = cables_color[i];
+            ele.style.color = "white";
+            ele.style.textShadow = "1px 1px black";
+          };
+        });
+
+        Dom.setBlinkArrowRed(true, 745, 250, 35, null, 180).play();
+        setCC("Click on 'Make Connections'");
 
         //! Onclick for check connections
-        Scenes.items.btn_connectons_completed.item.onclick = ()=>{
-          
-          if(btnClickedCount==8){
-            
-            //! First red button click 
-            Scenes.items.part_1_slide_3_compo_1_text.set(208,114,50).zIndex(10)
-            Dom.setBlinkArrowRed(true,206,73).play()
-            setCC("Switch on Main Supply")
-            Scenes.items.part_2_conncection_supply_1_red_button.item.onclick = ()=>{
-              
-              Scenes.items.part_2_conncection_supply_1_red_button.hide()
-              Scenes.items.part_1_slide_3_compo_1_text.hide()
-              //! Second red button click
-              
-              Scenes.items.part_1_slide_3_compo_2_text.set(212,348,56).zIndex(10)
-              Dom.setBlinkArrowRed(true,206,308).play()
-              setCC("Switch on Gate Supply")
+        Scenes.items.btn_connectons_completed.item.onclick = () => {
+          if (btnClickedCount == 8) {
+            //! First red button click
+            Scenes.items.part_1_slide_3_compo_1_text
+              .set(208, 114, 50)
+              .zIndex(10);
+            Dom.setBlinkArrowRed(true, 206, 73).play();
+            setCC("Switch on Main Supply");
+            Scenes.items.part_2_conncection_supply_1_red_button.item.onclick =
+              () => {
+                Scenes.items.part_2_conncection_supply_1_red_button.hide();
+                Scenes.items.part_1_slide_3_compo_1_text.hide();
+                //! Second red button click
 
-              Scenes.items.part_2_conncection_supply_2_red_button.item.onclick = ()=>{
-                Scenes.items.part_2_conncection_supply_2_red_button.hide()
-                Scenes.items.part_1_slide_3_compo_2_text.hide()
+                Scenes.items.part_1_slide_3_compo_2_text
+                  .set(212, 348, 56)
+                  .zIndex(10);
+                Dom.setBlinkArrowRed(true, 206, 308).play();
+                setCC("Switch on Gate Supply");
 
-                Dom.setBlinkArrowRed(true,748,360,35,null,180).play()
-                setCC("Click on 'Begin Experiment'")
-                partConnectionsIsComplete = true
-              }
-            }
-            
-          }
-          else{
-            Scenes.items.part_1_incomplete_connection.set(570,300,50).zIndex(10)
+                Scenes.items.part_2_conncection_supply_2_red_button.item.onclick =
+                  () => {
+                    Scenes.items.part_2_conncection_supply_2_red_button.hide();
+                    Scenes.items.part_1_slide_3_compo_2_text.hide();
+
+                    Dom.setBlinkArrowRed(true, 748, 360, 35, null, 180).play();
+                    setCC("Click on 'Begin Experiment'");
+                    partConnectionsIsComplete = true;
+                  };
+              };
+          } else {
+            Scenes.items.part_1_incomplete_connection
+              .set(570, 300, 50)
+              .zIndex(10);
             anime({
               targets: Scenes.items.part_1_incomplete_connection.item,
               delay: 2000,
-              complete(){
-                Scenes.items.part_1_incomplete_connection.hide()
-              }
-            })
+              complete() {
+                Scenes.items.part_1_incomplete_connection.hide();
+              },
+            });
           }
-        }
+        };
       }
-      partConnections()
+      partConnections();
 
       //! Graph Part
-      function partCalculation(){
+      function partCalculation() {
         // show arrow for R
-        Dom.setBlinkArrowRed(true,254,310,35,null,-90).play()
-        setCC("Select R")
+        Dom.setBlinkArrowRed(true, 254, 310, 35, null, -90).play();
+        setCC("Select R");
         // for recrod btn
-        let recordBtnIdx = 0
-        Scenes.items.part_1_1_calculations.set(-15,-70,480,983)
-        Scenes.items.btn_plot.set(517, 381, 34, 70).zIndex(10)
-        Scenes.items.btn_procedure_calculations.set(494, -75, 35,123)
-        Scenes.items.btn_nomenclature.set(620, -75, 37, 160)
-        Scenes.items.btn_conclusion.set(787, -75, 37)
+        let recordBtnIdx = 0;
+        Scenes.items.part_1_1_calculations.set(-15, -70, 480, 983);
+        Scenes.items.btn_plot.set(517, 381, 34, 70).zIndex(10);
+        Scenes.items.btn_procedure_calculations.set(494, -75, 35, 123);
+        Scenes.items.btn_nomenclature.set(620, -75, 37, 160);
+        Scenes.items.btn_conclusion.set(787, -75, 37);
         // * Calling slider
-        sliders.showSliderFor("1_1")
+        sliders.showSliderFor("1_1");
 
         // * Graph section
-        Scenes.items.graph_box_1.set(493,173,null,451).zIndex(10)
-        let ctx = Scenes.items.graph1.item
-        let graphIdx = 0
-        let yLabel = "Collector Current (I<subC</sub>)"
-        let xLabel = "Collector-to-Emitter Voltage(V<sub>CE</sub>)"
+        Scenes.items.graph_box_1.set(493, 173, null, 451).zIndex(10);
+        let ctx = Scenes.items.graph1.item;
+        let graphIdx = 0;
+        let yLabel = "Collector Current (I<subC</sub>)";
+        let xLabel = "Collector-to-Emitter Voltage(V<sub>CE</sub>)";
 
-        let dataLabel = ""
+        let dataLabel = "";
         // for setting xy label of graph in position
-        function setXYLabel(){
-          Scenes.items.xLabel.set(619,387)
-          Scenes.items.yLabel.set(421,277)
+        function setXYLabel() {
+          Scenes.items.xLabel.set(619, 387);
+          Scenes.items.yLabel.set(421, 277);
         }
         // ploting empty graph
-        let graphRef = Scenes.plotGraph(ctx,graphIdx,[],dataLabel,xLabel,yLabel,true,true)
-        setXYLabel()
-        
+        let graphRef = Scenes.plotGraph(
+          ctx,
+          graphIdx,
+          [],
+          dataLabel,
+          xLabel,
+          yLabel,
+          true,
+          true
+        );
+        setXYLabel();
+
         // let table = new Dom(".part_2_table").set(600,-76).item
 
-        let table = new Dom(".part3_table_two").set(493,-35).zIndex(10).item
+        let table = new Dom(".part3_table_two").set(493, -35).zIndex(10).item;
 
         // * assume tempTitle10 as a btn record
-        let btn_record = sliders.btn_record.item
-        
+        let btn_record = sliders.btn_record.item;
+
         // * StepTutorial
         // show arrow for R
         // and other blink arrow is on sliders.js
-        
+
         // ! btn_record onclick
-        recordBtnIdx = 0
-        btn_record.onclick = ()=>{
-          let rows = table.tBodies[0].rows
-          if(recordBtnIdx > rows.length){
-            return
+        recordBtnIdx = 0;
+        btn_record.onclick = () => {
+          let rows = table.tBodies[0].rows;
+          if (recordBtnIdx > rows.length) {
+            return;
           }
 
           // * Filling Table
           let colIdx = {
-            6:1,
-            7:2,
-            8:3,
-            9:4,
-            10:5,
-          }
+            6: 1,
+            7: 2,
+            8: 3,
+            9: 4,
+            10: 5,
+          };
 
-          let first_vGs_value = 6
-          let last_vGs_value = 10
-          let vGs_value = sliders.slider_vGs.getValue()
-          let vIn_value = sliders.slider_vIn.getValue()
-          let R_value = sliders.slider_R.getValue()
+          let first_vGs_value = 6;
+          let last_vGs_value = 10;
+          let vGs_value = sliders.slider_vGs.getValue();
+          let vIn_value = sliders.slider_vIn.getValue();
+          let R_value = sliders.slider_R.getValue();
 
-          updateValues(vIn_value,vGs_value,R_value)
+          updateValues(vIn_value, vGs_value, R_value);
 
           // seting column index for filling the table
-          if(vGs_value == first_vGs_value){
+          if (vGs_value == first_vGs_value) {
             // vds value
-            rows[recordBtnIdx+1].cells[0].innerHTML = Formulas.usingMeters.vDS(recordBtnIdx)
+            rows[recordBtnIdx + 1].cells[0].innerHTML =
+              Formulas.usingMeters.vDS(recordBtnIdx);
           }
-          rows[recordBtnIdx+1].cells[colIdx[vGs_value]].innerHTML = Formulas.usingMeters.iD(values,colIdx[vGs_value],recordBtnIdx)
-          recordBtnIdx++
+          rows[recordBtnIdx + 1].cells[colIdx[vGs_value]].innerHTML =
+            Formulas.usingMeters.iD(values, colIdx[vGs_value], recordBtnIdx);
+          recordBtnIdx++;
           // to plot the data
-          if(recordBtnIdx == rows.length - 1){
-            
-            
+          if (recordBtnIdx == rows.length - 1) {
             // ! btn Plot onclick
-            Scenes.items.btn_plot.item.onclick = ()=>{
+            Scenes.items.btn_plot.item.onclick = () => {
               // shwo arrwo for vGs
-              Dom.setBlinkArrowRed(true,0,320,35,null,-90).play()
-              setCC("Select V<sub>GE</sub>")
+              Dom.setBlinkArrowRed(true, 0, 320, 35, null, -90).play();
+              setCC("Select V<sub>GE</sub>");
 
               // goto default position for vIn value and recordBtnIdx = 0
-              function resetFun(){
-                recordBtnIdx=0
-                let defaultLeftPos = 10
-                Anime.moveLeft(sliders.slider_vIn.item,defaultLeftPos)
+              function resetFun() {
+                recordBtnIdx = 0;
+                let defaultLeftPos = 10;
+                Anime.moveLeft(sliders.slider_vIn.item, defaultLeftPos);
               }
               // for adding data to graph
-              function addDataToGraph(){
-                let data = []
-                for(let row of rows){
-                  let x = row.cells[0].innerHTML
-                  let y = row.cells[colIdx[vGs_value]].innerHTML
-                  data.push({x,y})
+              function addDataToGraph() {
+                let data = [];
+                for (let row of rows) {
+                  let x = row.cells[0].innerHTML;
+                  let y = row.cells[colIdx[vGs_value]].innerHTML;
+                  data.push({ x, y });
                 }
                 let bgColors = [
                   "-",
@@ -1475,319 +1554,355 @@ const Scenes = {
                   "#0607c2",
                   "#e413e6",
                   "#25de22",
-                  "#000000"
-                ]
-                let bgColor = bgColors[colIdx[vGs_value]]
-                let labelForDataSet = `Vgs = ${vGs_value}V`
+                  "#000000",
+                ];
+                let bgColor = bgColors[colIdx[vGs_value]];
+                let labelForDataSet = `Vgs = ${vGs_value}V`;
 
                 // add data set
-                Scenes.graphFeatures.addDataset(graphRef,labelForDataSet,bgColor,data)
-              }              
-              
-              if(vGs_value!=last_vGs_value){
-                resetFun()
+                Scenes.graphFeatures.addDataset(
+                  graphRef,
+                  labelForDataSet,
+                  bgColor,
+                  data
+                );
               }
-              let totalDatasets = 5
-              if(Scenes.graphFeatures.getSizeOfDatasets(graphRef) < totalDatasets){
-                addDataToGraph()
+
+              if (vGs_value != last_vGs_value) {
+                resetFun();
+              }
+              let totalDatasets = 5;
+              if (
+                Scenes.graphFeatures.getSizeOfDatasets(graphRef) < totalDatasets
+              ) {
+                addDataToGraph();
               }
 
               // end the slide
-              if(vGs_value==last_vGs_value){
-                Dom.setBlinkArrowRed(-1)
-                Dom.setBlinkArrowRed(true,840,-30,null,null,90).play()
-                setCC("Goto 'Conclusion'")
-                setTimeout(()=>{
+              if (vGs_value == last_vGs_value) {
+                Dom.setBlinkArrowRed(-1);
+                Dom.setBlinkArrowRed(true, 840, -30, null, null, 90).play();
+                setCC("Goto 'Conclusion'");
+                setTimeout(() => {
                   Dom.setBlinkArrow(true, 790, 544).play();
                   setCC("Click 'Next' to go to next step");
                   setIsProcessRunning(false);
-                },25000)
+                }, 25000);
                 // for going to the second step
-                Scenes.currentStep = 2
-              }
-            }
+                Scenes.currentStep = 2;
+              } 
+            };
           }
-        }
-
+        };
       }
 
       //to show btn popup
-      Scenes.showPopup("1_1")
+      Scenes.showPopup("1_1");
 
       // todo remove
       // hideConnectionStepImgs()
       // partCalculation()
 
       //! onclick start btn
-      Scenes.items.btn_begin_experiment.item.onclick = ()=>{
+      Scenes.items.btn_begin_experiment.item.onclick = () => {
         // to enable the button
-        if(partConnectionsIsComplete){
+        if (partConnectionsIsComplete) {
           // * Hide preivous
-          hideConnectionStepImgs()
+          hideConnectionStepImgs();
           // * calculation part
-          partCalculation()
+
+          Scenes.realCurrentStep = 3;
+          console.log(`RealCurrentStep: ${Scenes.realCurrentStep}`);
+          partCalculation();
           //to show btn popup
-          Scenes.showPopup("1_1")
+          Scenes.showPopup("1_1");
         }
-      }
+      };
 
-      return true
+      return true;
     }),
-
     (step3 = function () {
       setIsProcessRunning(true);
-      Scenes.setStepHeading("", "using oscilloscope",true)
+      Scenes.setStepHeading("", "using oscilloscope", true);
       Scenes.items.btn_next.show();
       // ! Step Connection
 
-      // required elements 
-      let temp = 16
+      // required elements
+      let temp = 16;
       let btns = [
-        Scenes.items.btn_instructions.set(750 + 75,210+ 10-temp, 40).zIndex(20),
-        Scenes.items.btn_connections.set(750 + 75,210+ 55-temp, 40).zIndex(20),
+        Scenes.items.btn_instructions
+          .set(750 + 75, 210 + 10 - temp, 40)
+          .zIndex(20),
+        Scenes.items.btn_connections
+          .set(750 + 75, 210 + 55 - temp, 40)
+          .zIndex(20),
         Scenes.items.btn_connectons_completed
-          .set(750 + 75,210+ 100-temp, 50, 120)
+          .set(750 + 75, 210 + 100 - temp, 50, 120)
           .zIndex(20),
         Scenes.items.btn_start_experiment
-          .set(750 + 75,210+ 153-temp, 50, 120)
+          .set(750 + 75, 210 + 153 - temp, 50, 120)
           .zIndex(20),
-        Scenes.items.btn_reset.set(755, 207+175-temp, 30).zIndex(20),
-      ]
+        Scenes.items.btn_reset.set(825, 164, 35, 101).zIndex(20),
+      ];
 
       // required images
       let images = [
-        Scenes.items.part_1_2_components.set(-0,-70,480,983).zIndex(1),
-        Scenes.items.part_2_conncection_supply_1_red_button.set(145, 68, 29, 27).zIndex(20),
-        Scenes.items.part_2_conncection_supply_2_red_button.set(148, 321, 27, 23).zIndex(20),
+        Scenes.items.part_1_2_components.set(-0, -70, 480, 983).zIndex(1),
+        Scenes.items.part_2_conncection_supply_1_red_button
+          .set(145, 68, 29, 27)
+          .zIndex(20),
+        Scenes.items.part_2_conncection_supply_2_red_button
+          .set(149, 320, 27, 23)
+          .zIndex(20),
         Scenes.items.part_1_2_connections_box,
-      ]
+      ];
 
       let cables = [
-        Scenes.items.part_1_2_cable_p1.set(0,0).zIndex(10).hide(),
-        Scenes.items.part_1_2_cable_e.set(0,0).zIndex(11).hide(),
-        Scenes.items.part_1_2_cable_r2.set(0,0).zIndex(12).hide(),
-        Scenes.items.part_1_2_cable_p2.set(0,0).zIndex(13).hide(),
-        Scenes.items.part_1_2_cable_n2.set(0,0).zIndex(14).hide(),
-        Scenes.items.part_1_2_cable_dvp.set(0,0).zIndex(15).hide(),
-        Scenes.items.part_1_2_cable_cp.set(0,0).zIndex(16).hide(),
-        Scenes.items.part_1_2_cable_a1.set(0,0).zIndex(17).hide(),
-        Scenes.items.part_1_2_cable_v1.set(0,0).zIndex(18).hide(),
-        Scenes.items.part_1_2_cable_v2.set(0,0).zIndex(19).hide(),
-      ]
+        Scenes.items.part_1_2_cable_p1.set(0, 0).zIndex(10).hide(),
+        Scenes.items.part_1_2_cable_e.set(0, 0).zIndex(11).hide(),
+        Scenes.items.part_1_2_cable_r2.set(0, 0).zIndex(12).hide(),
+        Scenes.items.part_1_2_cable_p2.set(0, 0).zIndex(13).hide(),
+        Scenes.items.part_1_2_cable_n2.set(0, 0).zIndex(14).hide(),
+        Scenes.items.part_1_2_cable_dvp.set(0, 0).zIndex(15).hide(),
+        Scenes.items.part_1_2_cable_cp.set(0, 0).zIndex(16).hide(),
+        Scenes.items.part_1_2_cable_a1.set(0, 0).zIndex(17).hide(),
+        Scenes.items.part_1_2_cable_v1.set(0, 0).zIndex(18).hide(),
+        Scenes.items.part_1_2_cable_v2.set(0, 0).zIndex(19).hide(),
+      ];
 
       // ! for increasing the size
-      let l = 0,t = -70, h = 485, w = 945 
-      Scenes.items.part_1_2_components.set(l,t,h,w).zIndex(1)
-      cables.forEach(ele=>{
-        ele.set(l,t,h,w).hide()
-      })
+      let l = 0,
+        t = -70,
+        h = 485,
+        w = 945;
+      Scenes.items.part_1_2_components.set(l, t, h, w).zIndex(1);
+      cables.forEach((ele) => {
+        ele.set(l, t, h, w).hide();
+      });
 
       let cables_color = [
-             //oscilliscope
-          "#f31919", 
-          "#1d325a", 
-          "#ffd104", 
-          "#044e04", 
-          "#fd0167",
-          "#2f2d2d", 
-          "#848484", 
-          "#e39bb7", 
-          "#d16e2b", 
-          "#022802", 
-      ]
+        //oscilliscope
+        "#f31919",
+        "#1d325a",
+        "#ffd104",
+        "#044e04",
+        "#fd0167",
+        "#2f2d2d",
+        "#848484",
+        "#e39bb7",
+        "#d16e2b",
+        "#022802",
+      ];
 
-      function hideConnectionStepImgs(){
-        let allImages = [
-          ...btns,...images,...cables
-        ]
-        allImages.forEach(ele=>{
-          ele.hide()
-        })
-        Dom.setBlinkArrowRed(-1)
+      function hideConnectionStepImgs() {
+        let allImages = [...btns, ...images, ...cables];
+        allImages.forEach((ele) => {
+          ele.hide();
+        });
+        Dom.setBlinkArrowRed(-1);
       }
 
       //! Connection Part
       // to enable startExp Button
-      let partConnectionsIsComplete = false
-      function partConnections(){
+      let partConnectionsIsComplete = false;
+      function partConnections() {
         // Connection Logic
-        Scenes.items.part_1_2_connections_box.set(410,-78).hide()
+        Scenes.items.part_1_2_connections_box.set(410, -78).hide();
 
         // ! btn_reset onclick
-        Scenes.items.btn_reset.item.onclick = ()=>{
-          let box_buttons_reset = document.querySelectorAll(".part_1_2_connections_box button")
+        Scenes.items.btn_reset.item.onclick = () => {
+          let box_buttons_reset = document.querySelectorAll(
+            ".part_1_2_connections_box button"
+          );
           let temps = {
             textShadow: "none",
             color: "black",
-            backgroundColor: "transparent"
-          }
-          box_buttons_reset.forEach(ele=>{
-            let ele_Dom = new Dom(ele)
-            ele_Dom.styles(temps)
-          })
-          Scenes.steps[4]()
-        }
+            backgroundColor: "transparent",
+          };
+          box_buttons_reset.forEach((ele) => {
+            let ele_Dom = new Dom(ele);
+            ele_Dom.styles(temps);
+          });
+          Scenes.steps[4]();
+        };
 
         //! connection box onclick
-        Scenes.items.btn_connections.item.onclick = ()=>{
-          Scenes.items.part_1_2_connections_box.show("flex")
+        Scenes.items.btn_connections.item.onclick = () => {
+          Scenes.items.part_1_2_connections_box.show("flex");
           // ! connection table arrow move
-          Dom.setBlinkArrowRed(true,469,-4,35,null,90).play()
-          setCC("")
-        }
-        let box_buttons = document.querySelectorAll(".part_1_2_connections_box button")
+          Dom.setBlinkArrowRed(true, 469, -4, 35, null, 90).play();
+          setCC("");
+        };
+        let box_buttons = document.querySelectorAll(
+          ".part_1_2_connections_box button"
+        );
 
         //! connection box onclick
-        let btnClickedCount = 0
-        let connectionBtnArrow = 469
-        let arrowLeftGap = 43
-        box_buttons.forEach((ele,i)=>{
-          ele.onclick = ()=>{
+        let btnClickedCount = 0;
+        let connectionBtnArrow = 469;
+        let arrowLeftGap = 43;
+        box_buttons.forEach((ele, i) => {
+          ele.onclick = () => {
             // increasing count of complete connection
-            if(ele.style.color!="white"){
-              btnClickedCount++
-              //! move arrow 
-              connectionBtnArrow += arrowLeftGap
-              Dom.setBlinkArrowRed(true,connectionBtnArrow,-4,35,null,90).play()
-              
-              if(btnClickedCount==10){
-                Dom.setBlinkArrowRed(true,776,305,35,null,180).play()
-                setCC("Click on 'Connections Completed'")
+            if (ele.style.color != "white") {
+              btnClickedCount++;
+              //! move arrow
+              connectionBtnArrow += arrowLeftGap;
+              Dom.setBlinkArrowRed(
+                true,
+                connectionBtnArrow,
+                -4,
+                35,
+                null,
+                90
+              ).play();
 
-                Scenes.items.btn_connections.item.onclick = ()=>{}
+              if (btnClickedCount == 10) {
+                Dom.setBlinkArrowRed(true, 776, 305, 35, null, 180).play();
+                setCC("Click on 'Connections Completed'");
+
+                Scenes.items.btn_connections.item.onclick = () => {};
               }
             }
-            
-            cables[i].show()
-            ele.style.backgroundColor = cables_color[i]
-            ele.style.color = "white"
-            ele.style.textShadow = "1px 1px black"
-          }
-        })
 
-        Dom.setBlinkArrowRed(true,776,250,35,null,180).play()
-        setCC("Click on 'Make Connections'")
+            cables[i].show();
+            ele.style.backgroundColor = cables_color[i];
+            ele.style.color = "white";
+            ele.style.textShadow = "1px 1px black";
+          };
+        });
+
+        Dom.setBlinkArrowRed(true, 776, 250, 35, null, 180).play();
+        setCC("Click on 'Make Connections'");
 
         //! Onclick for check connections
-        Scenes.items.btn_connectons_completed.item.onclick = ()=>{
-          
-          if(btnClickedCount==10){
-            
-            //! First red button click 
-            Scenes.items.component_1_on_text.set(178,96,50).zIndex(20)
-            Dom.setBlinkArrowRed(true,170,65).play()
-            setCC("Switch on Main Supply")
-            Scenes.items.part_2_conncection_supply_1_red_button.item.onclick = ()=>{
-              
-              Scenes.items.part_2_conncection_supply_1_red_button.hide()
-              Scenes.items.component_1_on_text.hide()
-              //! Second red button click
-              
-              Scenes.items.component_2_on_text.set(168,338,56).zIndex(20)
-              Dom.setBlinkArrowRed(true,166,306).play()
-              setCC("Switch on Gate Supply")
+        Scenes.items.btn_connectons_completed.item.onclick = () => {
+          if (btnClickedCount == 10) {
+            //! First red button click
+            Scenes.items.component_1_on_text.set(178, 96, 50).zIndex(20);
+            Dom.setBlinkArrowRed(true, 170, 65).play();
+            setCC("Switch on Main Supply");
+            Scenes.items.part_2_conncection_supply_1_red_button.item.onclick =
+              () => {
+                Scenes.items.part_2_conncection_supply_1_red_button.hide();
+                Scenes.items.component_1_on_text.hide();
+                //! Second red button click
 
-              Scenes.items.part_2_conncection_supply_2_red_button.item.onclick = ()=>{
-                Scenes.items.part_2_conncection_supply_2_red_button.hide()
-                Scenes.items.component_2_on_text.hide()
+                Scenes.items.component_2_on_text.set(168, 338, 56).zIndex(20);
+                Dom.setBlinkArrowRed(true, 166, 306).play();
+                setCC("Switch on Gate Supply");
 
-                Dom.setBlinkArrowRed(true,776,360,35,null,180).play()
-                setCC("Click on 'Begin Experiment'")
-                partConnectionsIsComplete = true
-              }
-            }
-            
-          }
-          else{
-            Scenes.items.part_1_incomplete_connection.set(660,100,50).zIndex(10)
+                Scenes.items.part_2_conncection_supply_2_red_button.item.onclick =
+                  () => {
+                    Scenes.items.part_2_conncection_supply_2_red_button.hide();
+                    Scenes.items.component_2_on_text.hide();
+
+                    Dom.setBlinkArrowRed(true, 776, 360, 35, null, 180).play();
+                    setCC("Click on 'Begin Experiment'");
+                    partConnectionsIsComplete = true;
+                  };
+              };
+          } else {
+            Scenes.items.part_1_incomplete_connection
+              .set(660, 100, 50)
+              .zIndex(10);
             anime({
               targets: Scenes.items.part_1_incomplete_connection.item,
               delay: 2000,
-              complete(){
-                Scenes.items.part_1_incomplete_connection.hide()
-              }
-            })
+              complete() {
+                Scenes.items.part_1_incomplete_connection.hide();
+              },
+            });
           }
-        }
+        };
       }
-      partConnections()
+      partConnections();
 
       //! Graph Part
-      function partCalculation(){
+      function partCalculation() {
         // show arrow for R
-        Dom.setBlinkArrowRed(true,254,310,35,null,-90).play()
-        setCC("Select R")
-        Scenes.items.part_1_2_calculations.set(3,-70,480,963)
-        Scenes.items.btn_procedure_calculations.set(511,-57,37,110).zIndex(10)
-        Scenes.items.btn_nomenclature.set(624,-57,37,160).zIndex(10)
-        Scenes.items.btn_conclusion.set(787, -57, 37).zIndex(10)
+        Dom.setBlinkArrowRed(true, 254, 310, 35, null, -90).play();
+        setCC("Select R");
+        Scenes.items.part_1_2_calculations.set(3, -70, 480, 963);
+        Scenes.items.btn_procedure_calculations
+          .set(511, -57, 37, 110)
+          .zIndex(10);
+        Scenes.items.btn_nomenclature.set(624, -57, 37, 160).zIndex(10);
+        Scenes.items.btn_conclusion.set(787, -57, 37).zIndex(10);
 
         // neddle vGs rotate (-1,multipoint) deg
-        Scenes.items.niddle_vGs.set(547,71,74).rotate(-1).zIndex(10)
+        Scenes.items.niddle_vGs.set(547, 71, 74).rotate(-1).zIndex(10);
         // neddle vIn rotate (-1,126) deg
-        Scenes.items.niddle_vIn.set(765,71,74).rotate(-1).zIndex(10)
+        Scenes.items.niddle_vIn.set(765, 71, 74).rotate(-1).zIndex(10);
 
         // * Calling slider
-        sliders.showSliderFor("1_2")
+        sliders.showSliderFor("1_2");
 
         // * Graph section
-        Scenes.items.graph_box_2.set(511,131,282,432).zIndex(10)
-        let ctx = Scenes.items.graph2.item
-        let graphIdx = 1
-        let xLabel = "Collector-to-Emitter Voltage(V<sub>CE</sub>)"
-        let yLabel = "Collector Current (I<subC</sub>)"
+        Scenes.items.graph_box_2.set(511, 131, 282, 432).zIndex(10);
+        let ctx = Scenes.items.graph2.item;
+        let graphIdx = 1;
+        let xLabel = "Collector-to-Emitter Voltage(V<sub>CE</sub>)";
+        let yLabel = "Collector Current (I<subC</sub>)";
 
-        let dataLabel = ""
+        let dataLabel = "";
         // for setting xy label of graph in position
-        function setXYLabel(){
-          Scenes.items.xLabel.set(616,383)
-          Scenes.items.yLabel.set(442,262)
+        function setXYLabel() {
+          Scenes.items.xLabel.set(616, 383);
+          Scenes.items.yLabel.set(442, 262);
         }
         // ploting empty graph
-        let graphRef = Scenes.plotGraph(ctx,graphIdx,[],dataLabel,xLabel,yLabel,true,true)
-        setXYLabel()
-        
+        let graphRef = Scenes.plotGraph(
+          ctx,
+          graphIdx,
+          [],
+          dataLabel,
+          xLabel,
+          yLabel,
+          true,
+          true
+        );
+        setXYLabel();
+
         // let table = new Dom(".part_2_table").set(600,-76).item
 
-        let table = null
+        let table = null;
 
         // * assume tempTitle10 as a btn record
-        let btn_record = sliders.btn_record.item
+        let btn_record = sliders.btn_record.item;
 
         // ! btn_record onclick
-        let recordBtnIdx = 0
+        let recordBtnIdx = 0;
         // ! calculation value object
         let calculationValues = {
-          vDs: [0,10,20,30,40,50,60],
-          iD: [
-            [],[],[],[],[]
-          ],
-        }
-        btn_record.onclick = ()=>{
-          let vGs_value = sliders.slider_vGs.getValue()
-          let vIn_value = Math.round(sliders.slider_vIn.getValue())
-          let R_value = sliders.slider_R.getValue()
-          let firstValue = 0
+          vDs: [0, 10, 20, 30, 40, 50, 60],
+          iD: [[], [], [], [], []],
+        };
+        btn_record.onclick = () => {
+          let vGs_value = sliders.slider_vGs.getValue();
+          let vIn_value = Math.round(sliders.slider_vIn.getValue());
+          let R_value = sliders.slider_R.getValue();
+          let firstValue = 0;
 
-          updateValues(vIn_value,vGs_value,R_value)
+          updateValues(vIn_value, vGs_value, R_value);
 
           let vGs_idx = {
-            6:1,
-            7:2,
-            8:3,
-            9:4,
-            10:5,
-          }
-          let first_vGs_value = 4
-          let last_vGs_value = 15
+            6: 1,
+            7: 2,
+            8: 3,
+            9: 4,
+            10: 5,
+          };
+          let first_vGs_value = 4;
+          let last_vGs_value = 15;
 
           // vIn values
-          let vIn_accept_range = [0,40,80,120,160,200,240]  
-          let acceptedValueIndex = vIn_accept_range.indexOf(vIn_value)
-          let datasetIndex = vGs_idx[vGs_value] - 1 // which value perform for vgs
+          let vIn_accept_range = [0, 40, 80, 120, 160, 200, 240];
+          let acceptedValueIndex = vIn_accept_range.indexOf(vIn_value);
+          let datasetIndex = vGs_idx[vGs_value] - 1; // which value perform for vgs
 
           // for the first value add data set
-          if(vIn_value == firstValue){
+          if (vIn_value == firstValue) {
             // add datasets to graph
             let bgColors = [
               "_",
@@ -1795,33 +1910,44 @@ const Scenes = {
               "#0607c2",
               "#e413e6",
               "#25de22",
-              "#000000"
-            ]
-            let bgColor = bgColors[vGs_idx[vGs_value]]
-            let labelForDataSet = `Vgs = ${vGs_value}V`
+              "#000000",
+            ];
+            let bgColor = bgColors[vGs_idx[vGs_value]];
+            let labelForDataSet = `Vgs = ${vGs_value}V`;
 
             // add data set
-            Scenes.graphFeatures.addDataset(graphRef,labelForDataSet,bgColor,[])
+            Scenes.graphFeatures.addDataset(
+              graphRef,
+              labelForDataSet,
+              bgColor,
+              []
+            );
 
             // * add first value also
-            let x = Formulas.usingOscilloscope.vDS(acceptedValueIndex)
-            let y = Formulas.usingOscilloscope.iD(values,vGs_idx[vGs_value],x)
-            Scenes.graphFeatures.addData(graphRef,datasetIndex,{x,y})
-          }
-          else{
+            let x = Formulas.usingOscilloscope.vDS(acceptedValueIndex);
+            let y = Formulas.usingOscilloscope.iD(
+              values,
+              vGs_idx[vGs_value],
+              x
+            );
+            Scenes.graphFeatures.addData(graphRef, datasetIndex, { x, y });
+          } else {
             // adding data to graph
             // datasetIndex = vGs_idx[vGs_value] - 1
 
             //! add formula value here
-            let x = Formulas.usingOscilloscope.vDS(acceptedValueIndex)
-            let y = Formulas.usingOscilloscope.iD(values,vGs_idx[vGs_value],acceptedValueIndex)
-            let data = {x,y}
-            console.log("S: ",vGs_value,vGs_idx[vGs_value])
+            let x = Formulas.usingOscilloscope.vDS(acceptedValueIndex);
+            let y = Formulas.usingOscilloscope.iD(
+              values,
+              vGs_idx[vGs_value],
+              acceptedValueIndex
+            );
+            let data = { x, y };
+            console.log("S: ", vGs_value, vGs_idx[vGs_value]);
 
-            Scenes.graphFeatures.addData(graphRef,datasetIndex,data)
+            Scenes.graphFeatures.addData(graphRef, datasetIndex, data);
           }
-        }
-
+        };
       }
 
       // todo remove
@@ -1829,33 +1955,36 @@ const Scenes = {
       //   partCalculation()
 
       //to show btn popup
-      Scenes.showPopup("1_2")
+      Scenes.showPopup("1_2");
 
       //! onclick start btn
-      Scenes.items.btn_start_experiment.item.onclick = ()=>{
+      Scenes.items.btn_start_experiment.item.onclick = () => {
         // to enable the button
-        if(partConnectionsIsComplete){
+        if (partConnectionsIsComplete) {
           // * Hide preivous
-          hideConnectionStepImgs()
+          hideConnectionStepImgs();
+
+          Scenes.realCurrentStep = 4;
+          console.log(`RealCurrentStep: ${Scenes.realCurrentStep}`);
+
           // * calculation part
-          partCalculation()
+          partCalculation();
 
           //to show btn popup
-          Scenes.showPopup("1_2")
+          Scenes.showPopup("1_2");
         }
-      }
+      };
 
-      return true
+      return true;
     }),
-
     (step4 = function () {
       setIsProcessRunning(true);
 
-      Scenes.setStepHeading("Step-2", "Transfer Characteristics.",true);
+      Scenes.setStepHeading("Step-2", "Transfer Characteristics.", true);
       Scenes.items.btn_next.show();
       // ! Step Connection
 
-      // required elements 
+      // required elements
       let btns = [
         Scenes.items.btn_instructions.set(750 + 40, 190, 50).zIndex(10),
         Scenes.items.btn_connections.set(750 + 40, 190 + 55, 50).zIndex(10),
@@ -1865,311 +1994,486 @@ const Scenes = {
         Scenes.items.btn_start_experiment
           .set(750 + 40, 190 + 165, 50, 147)
           .zIndex(10),
-        Scenes.items.btn_reset.set(660, 190 + 165, 40).zIndex(10)
-      ]
+        Scenes.items.btn_reset.set(810, 145, 40, 102).zIndex(10),
+      ];
 
       // required images
       let images = [
-        Scenes.items.part_2_components.set(0,-80,495,975).zIndex(1),
-        Scenes.items.part_2_conncection_supply_1_red_button.set(169,65,28,23).zIndex(10),
-        Scenes.items.part_2_conncection_supply_2_red_button.set(177,300,28,23).zIndex(10),
+        Scenes.items.part_2_components.set(0, -80, 495, 975).zIndex(1),
+        Scenes.items.part_2_conncection_supply_1_red_button
+          .set(169, 65, 28, 23)
+          .zIndex(10),
+        Scenes.items.part_2_conncection_supply_2_red_button
+          .set(177, 300, 28, 23)
+          .zIndex(10),
         Scenes.items.part_2_connections_box,
-      ]
+      ];
 
       let cables = [
-        Scenes.items.part_2_cable_p1.set(0,0).zIndex(5).hide(),
-        Scenes.items.part_2_cable_e.set(0,0).zIndex(5).hide(),
-        Scenes.items.part_2_cable_a2.set(0,0).zIndex(5).hide(),
-        Scenes.items.part_2_cable_r2.set(0,0).zIndex(5).hide(),
-        Scenes.items.part_2_cable_p2.set(0,0).zIndex(5).hide(),
-        Scenes.items.part_2_cable_n2.set(0,0).zIndex(5).hide(),
-        Scenes.items.part_2_cable_v1.set(0,0).zIndex(5).hide(),
-        Scenes.items.part_2_cable_v2.set(0,0).zIndex(5).hide(),
-        Scenes.items.part_2_cable_vg1.set(0,0).zIndex(5).hide(),
-        Scenes.items.part_2_cable_vg2.set(0,0).zIndex(5).hide(),
-      ]
+        Scenes.items.part_2_cable_p1.set(0, 0).zIndex(5).hide(),
+        Scenes.items.part_2_cable_e.set(0, 0).zIndex(5).hide(),
+        Scenes.items.part_2_cable_a2.set(0, 0).zIndex(5).hide(),
+        Scenes.items.part_2_cable_r2.set(0, 0).zIndex(5).hide(),
+        Scenes.items.part_2_cable_p2.set(0, 0).zIndex(5).hide(),
+        Scenes.items.part_2_cable_n2.set(0, 0).zIndex(5).hide(),
+        Scenes.items.part_2_cable_v1.set(0, 0).zIndex(5).hide(),
+        Scenes.items.part_2_cable_v2.set(0, 0).zIndex(5).hide(),
+        Scenes.items.part_2_cable_vg1.set(0, 0).zIndex(5).hide(),
+        Scenes.items.part_2_cable_vg2.set(0, 0).zIndex(5).hide(),
+      ];
 
       // ! for increasing the size
-      let l = 0,t = -85, h = 495, w = 965 
-      Scenes.items.part_2_components.set(l,t,h,w).zIndex(1)
-      cables.forEach(ele=>{
-        ele.set(l,t,h,w).hide()
-      })
+      let l = 0,
+        t = -85,
+        h = 495,
+        w = 965;
+      Scenes.items.part_2_components.set(l, t, h, w).zIndex(1);
+      cables.forEach((ele) => {
+        ele.set(l, t, h, w).hide();
+      });
 
       let cables_color = [
-       //transfer characteristics
+        //transfer characteristics
 
-          "#fa0404",
-          "#375081", 
-          "#e3156d", 
-          "#898989", 
-          "#e2b019", 
-          "#4d4d4d",
-          "#025f02", 
-          "#6d066d", 
-          "#74350c", 
-          "#121212", 
+        "#fa0404",
+        "#375081",
+        "#e3156d",
+        "#898989",
+        "#e2b019",
+        "#4d4d4d",
+        "#025f02",
+        "#6d066d",
+        "#74350c",
+        "#121212",
+      ];
 
-  
-      ]
-      
-      function hideConnectionStepImgs(){
-        let allImages = [
-          ...btns,...images,...cables
-        ]
-        allImages.forEach(ele=>{
-          ele.hide()
-        })
-        Dom.setBlinkArrowRed(-1)
+      function hideConnectionStepImgs() {
+        let allImages = [...btns, ...images, ...cables];
+        allImages.forEach((ele) => {
+          ele.hide();
+        });
+        Dom.setBlinkArrowRed(-1);
       }
       //! Connection Part
       // to enable startExp Button
-      let partConnectionsIsComplete = false
-      function partConnections(){
-         // Connection Logic
-        Scenes.items.part_2_connections_box.set(442,-84).hide()
+      let partConnectionsIsComplete = false;
+      function partConnections() {
+        // Connection Logic
+        Scenes.items.part_2_connections_box.set(442, -84).hide();
 
         // ! btn_reset onclick
-        Scenes.items.btn_reset.item.onclick = ()=>{
-          let box_buttons_reset = document.querySelectorAll(".part_2_connections_box button")
+        Scenes.items.btn_reset.item.onclick = () => {
+          let box_buttons_reset = document.querySelectorAll(
+            ".part_2_connections_box button"
+          );
           let temps = {
             textShadow: "none",
             color: "black",
-            backgroundColor: "transparent"
-          }
-          box_buttons_reset.forEach(ele=>{
-            let ele_Dom = new Dom(ele)
-            ele_Dom.styles(temps)
-          })
-          Scenes.steps[5]()
-        }
+            backgroundColor: "transparent",
+          };
+          box_buttons_reset.forEach((ele) => {
+            let ele_Dom = new Dom(ele);
+            ele_Dom.styles(temps);
+          });
+          Scenes.steps[5]();
+        };
 
         //! connection box onclick
-        Scenes.items.btn_connections.item.onclick = ()=>{
-          Scenes.items.part_2_connections_box.show("flex")
+        Scenes.items.btn_connections.item.onclick = () => {
+          Scenes.items.part_2_connections_box.show("flex");
           // ! connection table arrow move
-          Dom.setBlinkArrowRed(true,510,-7,35,null,90).play()
-          setCC("")
-        }
-        let box_buttons = document.querySelectorAll(".part_2_connections_box button")
+          Dom.setBlinkArrowRed(true, 510, -7, 35, null, 90).play();
+          setCC("");
+        };
+        let box_buttons = document.querySelectorAll(
+          ".part_2_connections_box button"
+        );
 
         //! connection box onclick
-        let btnClickedCount = 0
-        let connectionBtnArrow = 510
-        let arrowLeftGap = 43
-        box_buttons.forEach((ele,i)=>{
-          ele.onclick = ()=>{
+        let btnClickedCount = 0;
+        let connectionBtnArrow = 510;
+        let arrowLeftGap = 43;
+        box_buttons.forEach((ele, i) => {
+          ele.onclick = () => {
             // increasing count of complete connection
-            if(ele.style.color!="white"){
-              btnClickedCount++
-              //! move arrow 
-              connectionBtnArrow += arrowLeftGap
-              Dom.setBlinkArrowRed(true,connectionBtnArrow,-7,35,null,90).play()
-              
-              if(btnClickedCount==10){
-                Dom.setBlinkArrowRed(true,745,305,35,null,180).play()
-                setCC("Click on 'Connections Completed'")
+            if (ele.style.color != "white") {
+              btnClickedCount++;
+              //! move arrow
+              connectionBtnArrow += arrowLeftGap;
+              Dom.setBlinkArrowRed(
+                true,
+                connectionBtnArrow,
+                -7,
+                35,
+                null,
+                90
+              ).play();
 
-                Scenes.items.btn_connections.item.onclick = ()=>{}
+              if (btnClickedCount == 10) {
+                Dom.setBlinkArrowRed(true, 745, 305, 35, null, 180).play();
+                setCC("Click on 'Connections Completed'");
+
+                Scenes.items.btn_connections.item.onclick = () => {};
               }
             }
-            
-            cables[i].show()
-            ele.style.backgroundColor = cables_color[i]
-            ele.style.color = "white"
-            ele.style.textShadow = "1px 1px black"
-          }
-        })
 
-        Dom.setBlinkArrowRed(true,745,250,35,null,180).play()
-        setCC("Click on 'Make Connections'")
+            cables[i].show();
+            ele.style.backgroundColor = cables_color[i];
+            ele.style.color = "white";
+            ele.style.textShadow = "1px 1px black";
+          };
+        });
+
+        Dom.setBlinkArrowRed(true, 745, 250, 35, null, 180).play();
+        setCC("Click on 'Make Connections'");
 
         //! Onclick for check connections
-        Scenes.items.btn_connectons_completed.item.onclick = ()=>{
-          
-          if(btnClickedCount==10){
-            
-            //! First red button click 
-            Scenes.items.component_1_on_text.set(200, 106, 50).zIndex(10)
-            Dom.setBlinkArrowRed(true,196, 62).play()
-            setCC("Switch on Main Supply")
-            Scenes.items.part_2_conncection_supply_1_red_button.item.onclick = ()=>{
-              
-              Scenes.items.part_2_conncection_supply_1_red_button.hide()
-              Scenes.items.component_1_on_text.hide()
-              //! Second red button click
-              
-              Scenes.items.component_2_on_text.set(204, 343, 56).zIndex(10)
-              Dom.setBlinkArrowRed(true,205, 298).play()
-              setCC("Switch on Gate Supply")
+        Scenes.items.btn_connectons_completed.item.onclick = () => {
+          if (btnClickedCount == 10) {
+            //! First red button click
+            Scenes.items.component_1_on_text.set(200, 106, 50).zIndex(10);
+            Dom.setBlinkArrowRed(true, 196, 62).play();
+            setCC("Switch on Main Supply");
+            Scenes.items.part_2_conncection_supply_1_red_button.item.onclick =
+              () => {
+                Scenes.items.part_2_conncection_supply_1_red_button.hide();
+                Scenes.items.component_1_on_text.hide();
+                //! Second red button click
 
-              Scenes.items.part_2_conncection_supply_2_red_button.item.onclick = ()=>{
-                Scenes.items.part_2_conncection_supply_2_red_button.hide()
-                Scenes.items.component_2_on_text.hide()
+                Scenes.items.component_2_on_text.set(204, 343, 56).zIndex(10);
+                Dom.setBlinkArrowRed(true, 205, 298).play();
+                setCC("Switch on Gate Supply");
 
-                Dom.setBlinkArrowRed(true,745,360,35,null,180).play()
-                setCC("Click on 'Begin Experiment'")
-                partConnectionsIsComplete = true
-              }
-            }
-          }
-          else{
-            Scenes.items.part_1_incomplete_connection.set(570,300,50).zIndex(10)
+                Scenes.items.part_2_conncection_supply_2_red_button.item.onclick =
+                  () => {
+                    Scenes.items.part_2_conncection_supply_2_red_button.hide();
+                    Scenes.items.component_2_on_text.hide();
+
+                    Dom.setBlinkArrowRed(true, 745, 360, 35, null, 180).play();
+                    setCC("Click on 'Begin Experiment'");
+                    partConnectionsIsComplete = true;
+                  };
+              };
+          } else {
+            Scenes.items.part_1_incomplete_connection
+              .set(570, 300, 50)
+              .zIndex(10);
             anime({
               targets: Scenes.items.part_1_incomplete_connection.item,
               delay: 2000,
-              complete(){
-                Scenes.items.part_1_incomplete_connection.hide()
-              }
-            })
+              complete() {
+                Scenes.items.part_1_incomplete_connection.hide();
+              },
+            });
           }
-        }
+        };
       }
-      partConnections()
+      partConnections();
 
       //! Graph Part
-      function partCalculation(){
+      function partCalculation() {
         // show arrow for R
-        Dom.setBlinkArrowRed(true,317,302,35,null,-90).play()
-        setCC("Select R")
+        Dom.setBlinkArrowRed(true, 317, 302, 35, null, -90).play();
+        setCC("Select R");
 
-        Scenes.items.part_2_calculations.set(0,-85,475,950)
-        Scenes.items.btn_procedure_calculations.set(785,-80,33,110)
-        Scenes.items.btn_nomenclature.set(785,-38,30)
-        Scenes.items.btn_conclusion.set(785, 2, 37)
-        Scenes.items.btn_plot.set(785,70,50).zIndex(10)
+        Scenes.items.part_2_calculations.set(0, -85, 475, 950);
+        Scenes.items.btn_procedure_calculations.set(785, -80, 33, 110);
+        Scenes.items.btn_nomenclature.set(785, -38, 30);
+        Scenes.items.btn_conclusion.set(785, 2, 37);
+        Scenes.items.btn_plot.set(785, 70, 50).zIndex(10);
         // * Calling slider
-        sliders.showSliderFor("2")
+        sliders.showSliderFor("2");
 
         // * Graph section
-        Scenes.items.graph_box_3.set(557,167,242,385).zIndex(10)
-        let ctx = Scenes.items.graph3.item
-        let graphIdx = 2
-        let xLabel = "Gate-to-Emitter Voltage(V<sub>GE</sub>)"
-        let yLabel = "Collector Current (I<subC</sub>)"
-        let dataLabel = "vDS = 50"
+        Scenes.items.graph_box_3.set(557, 167, 242, 385).zIndex(10);
+        let ctx = Scenes.items.graph3.item;
+        let graphIdx = 2;
+        let xLabel = "Gate-to-Emitter Voltage(V<sub>GE</sub>)";
+        let yLabel = "Collector Current (I<subC</sub>)";
+        let dataLabel = "vDS = 50";
         // ploting empty graph
-        let graphRef = Scenes.plotGraph(ctx,graphIdx,[],dataLabel,xLabel,yLabel,true)
+        let graphRef = Scenes.plotGraph(
+          ctx,
+          graphIdx,
+          [],
+          dataLabel,
+          xLabel,
+          yLabel,
+          true
+        );
         // for setting xy label of graph in position
-        function setXYLabel(){
-          Scenes.items.xLabel.set(644, 375)
-          Scenes.items.yLabel.set(484, 269)
+        function setXYLabel() {
+          Scenes.items.xLabel.set(644, 375);
+          Scenes.items.yLabel.set(484, 269);
         }
-        setXYLabel()
+        setXYLabel();
 
-        let table = new Dom(".part_2_table").set(581,-86).item
+        let table = new Dom(".part_2_table").set(581, -86).item;
         // * assume tempTitle10 as a btn record
-        let btn_record = sliders.btn_record.item
+        let btn_record = sliders.btn_record.item;
 
         // ! btn_record onclick
-        let recordBtnIdx = 0
-        btn_record.onclick = ()=>{
-          let rows = table.tBodies[0].rows
-          if(recordBtnIdx >= rows.length){
-            return
+        let recordBtnIdx = 0;
+        btn_record.onclick = () => {
+          let rows = table.tBodies[0].rows;
+          if (recordBtnIdx >= rows.length) {
+            return;
           }
 
-          let vGs_value = sliders.slider_vGs.getValue()
-          let vIn_value = Math.round(sliders.slider_vIn.getValue())
-          let R_value = sliders.slider_R.getValue()
-          updateValues(vIn_value,vGs_value,R_value)
+          let vGs_value = sliders.slider_vGs.getValue();
+          let vIn_value = Math.round(sliders.slider_vIn.getValue());
+          let R_value = sliders.slider_R.getValue();
+          updateValues(vIn_value, vGs_value, R_value);
 
           // * Filling Table
-          rows[recordBtnIdx].cells[0].innerHTML = vGs_value
-          rows[recordBtnIdx].cells[1].innerHTML = Formulas.transferCharacteristics.iD(values,recordBtnIdx)
-          recordBtnIdx++
+          rows[recordBtnIdx].cells[0].innerHTML = vGs_value;
+          rows[recordBtnIdx].cells[1].innerHTML =
+            Formulas.transferCharacteristics.iD(values, recordBtnIdx);
+          recordBtnIdx++;
 
           // to plot the data
-          if(recordBtnIdx == rows.length){
+          if (recordBtnIdx == rows.length) {
             // ! btn Plot onclick
-            Scenes.items.btn_plot.item.onclick = ()=>{
-              let data = []
-              for(let row of rows){
-                let x = row.cells[0].innerHTML
-                let y = row.cells[1].innerHTML
-                data.push({x,y})
+            Scenes.items.btn_plot.item.onclick = () => {
+              let data = [];
+              for (let row of rows) {
+                let x = row.cells[0].innerHTML;
+                let y = row.cells[1].innerHTML;
+                data.push({ x, y });
               }
 
-              Scenes.graphFeatures.addData(graphRef,0,data)
+              Scenes.graphFeatures.addData(graphRef, 0, data);
 
-              Dom.setBlinkArrowRed(-1)
-              Dom.setBlinkArrowRed(true,840,45,null,null,90).play()
-                setCC("Goto 'Conclusion'")
-                setTimeout(()=>{
-                  Dom.setBlinkArrow(true, 790, 544).play();
-                  setCC("Click 'Next' to go to next step");
-                  setIsProcessRunning(false);
-                },25000)
+              Dom.setBlinkArrowRed(-1);
+              Dom.setBlinkArrowRed(true, 840, 45, null, null, 90).play();
+              setCC("Goto 'Conclusion'");
+              setTimeout(() => {
+                Dom.setBlinkArrow(true, 790, 544).play();
+                setCC("Click 'Next' to go to next step");
+                setIsProcessRunning(false);
+              }, 25000);
               // for going to the second step
-              Scenes.currentStep = 2
-            }
+              Scenes.currentStep = 2;
+            };
           }
-        }
-
+        };
       }
 
       //to show btn popup
-      Scenes.showPopup("2")
+      Scenes.showPopup("2");
 
       // todo remove
-//  hideConnectionStepImgs()
-//   partCalculation()
+      //  hideConnectionStepImgs()
+      //   partCalculation()
 
       //! onclick start btn
-      Scenes.items.btn_start_experiment.item.onclick = ()=>{
+      Scenes.items.btn_start_experiment.item.onclick = () => {
         // to enable the button
-        if(partConnectionsIsComplete){
+        if (partConnectionsIsComplete) {
           // * Hide preivous
-          hideConnectionStepImgs()
+          hideConnectionStepImgs();
+
+          Scenes.realCurrentStep = 5;
+          console.log(`RealCurrentStep: ${Scenes.realCurrentStep}`);
+
           // * calculation part
-          partCalculation()
+          partCalculation();
           //to show btn popup
-          Scenes.showPopup("2")
+          Scenes.showPopup("2");
         }
-      }
-
-      return true
-    }),
-
-    (step5 = function () {
-      setIsProcessRunning(true);
-      Dom.hideAll();
-      Scenes.setStepHeading("Step-3", "Switching Characteristics.");
-      // setCC("Record 7 reading for 3 different load resistances.")
-      // ! show the slider
-      // Scenes.items.slider_box.set(25, 15).scale(0.95);
-      Scenes.items.btn_next.show()
-
-      //! Required Items
-      Scenes.items.part_3_components.set(0,-55,null, 950 )
-      Scenes.items.part_3_off_button.set(100, 65, 42, 65)
-      Scenes.items.part_3_text.set(90, 175, 80, 100)
-      Scenes.items.btn_procedure.set(20,298, 38, 170)
-      Scenes.items.btn_nomenclature.set(20,340, 38, 190)
-      Dom.setBlinkArrowRed(true,112,115,35,null,90).play()
-      
-      
-      
-      
-      let offBtn = Scenes.items.part_3_off_button.item
-      
-      offBtn.onclick = ()=>{
-        Dom.setBlinkArrowRed(-1)   
-        Scenes.items.part_3_graph.set( -10, -56, 404, 965)
-        Scenes.items.part_3_off_button.hide()
-        Scenes.items.part_3_text.hide()
-        Scenes.items.part_3_table_1.set(220,270, 135, 300)
-        Scenes.items.part_3_table_2.set(590,330, 50)
-        Scenes.items.part_3_table_3.set(742,330, 50)
-      }
-
-      //to show btn popup
-      Scenes.showPopup("3")
+      };
 
       return true;
     }),
     
+    // !Experimental result section
+    //! R LOAD  Waveforms section
+    (step6 = function () {
+      setIsProcessRunning(true);
+      // to hide previous step
+      Scenes.items.btn_transparent.hide()
+      //! Required Items
+      Scenes.items.btn_next.show();
+
+      //r load click
+      let arrowIdx = 0;
+      let arrows = [
+        // () => {
+        //   Dom.setBlinkArrowRed(true, 669, 73, 30, null, 180).play();
+        //   arrowIdx++;
+        // },
+        () => {
+          Dom.setBlinkArrowRed(true, 518, 177, 30, null, 180).play();
+          arrowIdx++;
+        },
+        () => {
+          Dom.setBlinkArrowRed(true, 518, 177 + 85, 30, null, 180).play();
+          arrowIdx++;
+        },
+        () => {
+          Dom.setBlinkArrowRed(-1);
+        },
+      ];
+
+      arrows[arrowIdx]();
+      // setCC(
+      //   "To View the experimental waveforms select the parameters and proceed further."
+      // );
+      Scenes.items.menu_page.set(30, -11, 435);
+      // Scenes.items.circle.set(426, 362, 76).hide();
+
+      let btns = [
+        // Scenes.items.btn_input_voltage.set(719, 159 - 92, 47).zIndex(1),
+        Scenes.items.btn_1.set(558, 166, 52).zIndex(1),
+        Scenes.items.btn_2.set(558, 166 + 84, 60).zIndex(1),
+      ];
+
+      let vals = [
+        // Scenes.items.val_v
+        //   .set(719, 35 + 159 - 92, 47)
+        //   .zIndex(1)
+        //   .hide(),
+        Scenes.items.val_vin.set(763, 169, 47).zIndex(1).hide(),
+        Scenes.items.val_vgs.set(767, 255, 47).zIndex(1).hide(),
+      ];
+
+      let optionsClick = [0, 0];
+      let btn_see_waveforms = Scenes.items.btn_click
+        .set(442, 374, 51)
+        .zIndex(1);
+
+      btns.forEach((btn, idx) => {
+        btn.item.onclick = () => {
+          arrows[arrowIdx]();
+          vals[idx].show();
+          optionsClick[idx] = 1;
+          if (optionsClick.indexOf(0) == -1) {
+            Scenes.items.circle.set(426, 362, 76);
+            btn_see_waveforms.item.classList.add("btn-img");
+            let scaleBtn = anime({
+              targets: Scenes.items.circle.item,
+              scale: [1, 1.1],
+              duration: 1000,
+              easing: "linear",
+              loop: true,
+            });
+            btn_see_waveforms.item.onclick = () => {
+              scaleBtn.reset();
+              waveformShow();
+            };
+          }
+        };
+      });
+
+      let scenes = [
+        Scenes.items.frame_1.set(0, 9, 420).hide(),
+        Scenes.items.frame_2.set(0, 9, 420).hide(),
+        Scenes.items.frame_3.set(0, 9, 420).hide(),
+      ];
+
+      let waveformShow = () => {
+        vals.forEach((_, idx) => {
+          btns[idx].hide();
+          vals[idx].hide();
+        });
+        Scenes.items.circle.set(580, 346, 93).hide();
+        Scenes.items.btn_click.hide();
+        Scenes.items.menu_page.hide();
+
+        // Dom.setBlinkArrowRed(true, 555, 162, 30, null, 0).play();
+        Dom.setBlinkArrowRed(-1);
+
+        scenes[0].show();
+        setCC(
+          "The purple curves are the output characteristics plots for different Gate-to-Emitter voltages."
+        );
+        setCC(
+          "The x-axis is Collector-to-Emitter voltage while the y-axis is the collector current."
+        );
+
+        setTimeout(() => {
+          // setCC("Click 'Next' to go to next step");
+          Dom.setBlinkArrow(true, 790, 415).play();
+          setIsProcessRunning(false);
+        }, 9000);
+      };
+
+      return true;
+    }),
+    //! R LOAD  CLICK 2
+    (step7 = function () {
+      setIsProcessRunning(true);
+
+      //! Required Items
+      Scenes.items.btn_next.show();
+      // to hide previous step
+      Scenes.items.frame_2.set(0, 9, 420);
+      Dom.setBlinkArrowRed(true, 532, 280, 30, null, 0).play();
+
+      setCC(
+        "IGBT starts conducting at threshold Gate-to-Emitter voltage value of 5 V. Below this value, IGBT is in cutoff region."
+      );
+
+      setTimeout(() => {
+        // setCC("Click 'Next' to go to next step");
+        Dom.setBlinkArrow(true, 790, 415).play();
+        setIsProcessRunning(false);
+      }, 7000);
+
+      //! Required Items
+
+      return true;
+    }),
+    //! R LOAD  CLICK 3
+    (step8 = function () {
+      setIsProcessRunning(true);
+
+      //! Required Items
+      Scenes.items.btn_next.show();
+      // Scenes.items.slider_box.hide();
+
+      // to hide previous step
+      Scenes.items.frame_3.set(0, 9, 420);
+      // Dom.setBlinkArrowRed(true, 555, 317, 30, null, 0).play();
+      // Dom.setBlinkArrowRed(-1)
+
+      setCC(
+        "These characteristics clearly indicate three distinct regions: Cutoff, Linear and Active region."
+      );
+
+      setTimeout(() => {
+        setCC("Simulation Done");
+        // setCC("Click 'Next' to go to next step");
+        // Dom.setBlinkArrow(true, 790, 415).play();
+        // setIsProcessRunning(false);
+      }, 3000);
+
+      //! Required Items
+
+      return true;
+    }),
   ],
+  // ! For adding realcurrentstep in every step
+  // ! For tracking the current step accuratly
+  realCurrentStep: null,
+  setRealCurrentStep() {
+    let count = 0;
+    this.steps.forEach((step, idx) => {
+      const constCount = count;
+      let newStep = () => {
+        this.realCurrentStep = constCount;
+        console.log(`RealCurrentStep: ${this.realCurrentStep}`);
+        return step();
+      };
+
+      count++;
+      // let ignoreStepsForAdding = [3, 4, 5];
+      // if (ignoreStepsForAdding.indexOf(idx) != -1) return;
+
+
+      this.steps[idx] = newStep;
+    });
+  },
   back() {
     //! animation isRunning
     // if (isRunning) {
@@ -2186,17 +2490,33 @@ const Scenes = {
     }
   },
   next() {
+    let ignore = true
+
+    const ignoreDrawerProgress = ()=>{
+      let stepsToIgnore = [1,3,4,5]
+      console.log(this.realCurrentStep)
+      ignore = stepsToIgnore.indexOf(this.realCurrentStep) != -1
+      return 
+    }
+    if(!this.realCurrentStep){
+      Scenes.setRealCurrentStep()
+    }
     //! animation isRunning
     if (isRunning) {
-      return;
+      return
     }
     if (this.currentStep < this.steps.length) {
+      ignoreDrawerProgress()
+
       if (this.steps[this.currentStep]()) {
-        nextDrawerItem();
-        nextProgressBar();
+        if(!ignore){
+          nextDrawerItem();
+          nextProgressBar();
+        }
         this.currentStep++;
-      }
+      }         
     } else {
+      
     }
   },
 };
@@ -2236,8 +2556,8 @@ const Scenes = {
 // rangeSlider();
 
 // stepcalling
-Scenes.currentStep = 1
-Scenes.next()
+Scenes.currentStep = 1;
+Scenes.next();
 // Scenes.steps[3]()
 // Scenes.next()
 // Scenes.next()
@@ -2321,4 +2641,3 @@ function btnPopupBox() {
 //   infoElement.style.top = y + "px";
 //   infoElement.style.left = x + 20 + "px";
 // }
-
