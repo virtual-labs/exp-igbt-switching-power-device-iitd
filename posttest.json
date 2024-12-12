@@ -1,0 +1,157 @@
+{
+  "version": 2.0,
+  "questions": [
+    {
+      
+      "question": "1. Which of the following is true for IGBT:",
+      "answers": {  
+        "a": "It is a minority carrier device",
+        "b": "It is a majority carrier device",
+        "c": "It is a three layer device",
+        "d": "Its lightly doped n-region is connected to its collector"
+      },
+      "explanations": {
+        "a": "Explanation 1: IGBT is a minority carrier device as it operates mainly on the principle of controlling the flow of minority carriers (holes).",
+        "b": "Explanation 2",
+        "c": "Explanation 3",
+        "d": "Explanation 4"
+      },
+      "correctAnswer": "a",
+      "difficulty": "beginner"
+    },
+      
+    {
+
+      "question": "2. The transfer characteristics of IGBT is a plot between:",
+      "answers": {
+        "a": "Gate-to-Emitter voltage (V<sub>GE</sub>)-vs-Collector Current (I<sub>C</sub>)",
+        "b": "Collector-to-Emitter voltage (V<sub>CE</sub>) vs-Collector Current (I<sub>C</sub>)",
+        "c": "Gate-to-Emitter voltage (V<sub>GE</sub>)-vs- Collector-to-Emitter voltage (V<sub>CE</sub>)",
+        "d": "Collector-to-Emitter voltage (V<sub>CE</sub>) vs- Gate Current (I<sub>G</sub>)"
+      },
+      "explanations": {
+        "a": "Explanation 1: Transfer characteristics of IGBT shows the relation between the Gate-to-Emitter voltage and the Collector current.",
+        "b": "Explanation 2",
+        "c": "Explanation 3",
+        "d": "Explanation 4"
+      },
+      "correctAnswer": "a",
+      "difficulty": "beginner"
+    },
+    
+    {
+      
+      "question": "3. An IGBT is in ON- state. It is observed that with increasing collector-to-emitter voltage (V<sub>CE</sub>) the collector current (I<sub>C</sub>) is almost constant. Which region is the IGBT operating in?",
+      "answers": {
+        "a": "Cutoff",
+        "b": "Linear",
+        "c": "Saturation",
+        "d": "Reverse blocking"
+      },
+      "explanations": {
+        "a": "Explanation 1",
+        "b": "Explanation 2",
+        "c": "Explanation 3: When IGBT is in saturation mode, its collector current remains constant.",
+        "d": "Explanation 4"
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+        
+    {
+
+      "question": "4. When compared to MOSFET  the time required to turn- OFF an IGBT is?",
+      "answers": {
+        "a": "Almost equal",
+        "b": "Lower",
+        "c": "Higher",
+        "d": "Half"
+      },
+      "explanations": {
+        "a": "Explanation 1",
+        "b": "Explanation 2",
+        "c": "Explanation 3: IGBT turn- OFF time is greater than MOSFET due to the presence of tail current.",
+        "d": "Explanation 4"
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+
+      {
+        
+      "question": "5. A positive DC voltage is applied across the collector-to-emitter of an IGBT. It is then switched- ON using gate voltage. A DC current then starts flowing through the device. After sometime the gate signal is stopped. What is the status of IGBT?",
+      "answers": {
+        "a": "IGBT stops conducting (Reverse blocking state).",
+        "b": "IGBT heavily conducts (Reverse breakdown).",
+        "c": "IGBT continues to conduct (Forward conducting state).",
+        "d": "IGBT stops conducting (Forward blocking state)."
+      },
+      "explanations": {
+        "a": "Explanation 1",
+        "b": "Explanation 2",
+        "c": "Explanation 3",
+        "d": "Explanation 4: IGBT is turned- OFF when gate pulse is withdrawn."
+      },
+      "correctAnswer": "d",
+      "difficulty": "beginner"
+    },
+
+      {  
+        
+      "question": "6. A forward biased IGBT comes into conduction state by?",
+      "answers": {
+        "a": "Allowing Collector current (I<sub>C</sub>)",
+        "b": "Applying Collector-to-Emitter voltage (V<sub>CE</sub>)",
+        "c": "Applying Gate-to-Emitter voltage (V<sub>GE</sub>)",
+        "d": "Allowing Gate current (I<sub>G</sub>)"
+      },
+      "explanations": {
+        "a": "Explanation 1",
+        "b": "Explanation 2",
+        "c": "Explanation 3: IGBT comes into conduction when gate-to-emitter voltage above the threshold value is given.",
+        "d": "Explanation 4"
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+
+      {
+       
+      "question": "7. In comparison to MOSFET the losses in IGBT are?",
+      "answers": {
+        "a": "Higher",
+        "b": "Lower",
+        "c": "Almost equal",
+        "d": "Double"
+      },
+      "explanations": {
+        "a": "Explanation 1",
+        "b": "Explanation 2: IGBT has lower ON-state resistance and hence lower conduction losses compared to MOSFET.",
+        "c": "Explanation 3",
+        "d": "Explanation 4"
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+
+      {
+
+      "question": "8. How can a conducting IGBT be brought to OFF-state?",
+      "answers": {
+        "a": "By application of positive collector current (I<sub>C</sub>)",
+        "b": "By applying negative gate current (I<sub>G</sub>).",
+        "c": "By reducing the gate voltage (V<sub>GE</sub>) to zero.",
+        "d": "By applying positive collector-to-emitter voltage (V<sub>CE</sub>)."
+      },
+      "explanations": {
+        "a": "Explanation 1",
+        "b": "Explanation 2",
+        "c": "Explanation 3: IGBT is turned- OFF when gate pulse is removed.",
+        "d": "Explanation 4"
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    }
+
+  ]
+}
