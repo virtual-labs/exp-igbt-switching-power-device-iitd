@@ -130,3 +130,8 @@ The Transfer characteristics of IGBT is shown in Fig. 6.
 Fig. 6. Transfer characteristics of IGBT.
 <br>
 </center>
+
+<div style="float: left; width:100%;">
+  
+#### ("For more Information on mathematical analysis, see references")
+<br></div>
