@@ -1,0 +1,157 @@
+{
+  "version": 2.0,
+  "questions": [
+    {
+   
+      "question": "1. Select the false statement:",
+      "answers": {  
+        "a": "IGBT has three terminals: Collector, Emitter and Gate.",
+        "b": "IGBT is a four-layer semiconductor device.",
+        "c": "IGBT allows current in either directions.",
+        "d": "IGBT has three junctions."
+      },
+      "explanations": {
+        "a": "Explanation 1",
+        "b": "Explanation 2",
+        "c": "Explanation 3: IGBT is a unidirectional device and allows current to flow only from Collector to Emitter when sufficient Gate-to-Emitter voltage is applied.",
+        "d": "Explanation 4"
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+      
+    {
+
+      "question": "2. The properties of IGBT are a combination of which of the following two devices?",
+      "answers": {
+        "a": "MOSFET and SCR",
+        "b": "SCR and TRIAC",
+        "c": "MOSFET and BJT",
+        "d": "BJT and TRIAC"
+      },
+      "explanations": {
+        "a": "Explanation 1",
+        "b": "Explanation 2",
+        "c": "Explanation 3: IGBT structure is a combination of MOSFET (at the input side) and BJT (output side).",
+        "d": "Explanation 4"
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+    
+    {
+
+      "question": "3. Identify the three terminals of IGBT- collector (C), emitter (E) and gate (G) in the IGBT figure given below from left-to-right.<br><center><img src='images/pr1.png' height='300px'></center><br>",
+      "answers": {
+        "a": "(i)- gate, (ii)- collector, (iii)- emitter",
+        "b": "(i)- collector, (ii)- emitter, (iii)- gate",
+        "c": "(i)- gate, (ii)- emitter, (iii)- collector",
+        "d": "(i)- emitter, (ii)- collector, (iii)- gate"
+      },
+      "explanations": {
+        "a": "Explanation 1: Standard nomenclature adopted.",
+        "b": "Explanation 2",
+        "c": "Explanation 3",
+        "d": "Explanation 4"
+      },
+      "correctAnswer": "a",
+      "difficulty": "beginner"
+    },
+        
+    {
+    
+      "question": "4. Which of the following statements is correct?",
+      "answers": {
+        "a": "The ON-state losses of IGBT is lower than that of MOSFET",
+        "b": "IGBT is faster than MOSFET",
+        "c": "IGBT combines the characteristics of MOSFET and a diode",
+        "d": "IGBT is best suited for frequencies above 100 kHz applications"
+      },
+      "explanations": {
+        "a": "Explanation 1: IGBT has lower conduction losses compared to MOSFET.",
+        "b": "Explanation 2",
+        "c": "Explanation 3",
+        "d": "Explanation 4"
+      },
+      "correctAnswer": "a",
+      "difficulty": "beginner"
+    },
+
+      {
+      
+      "question": "5. Which of the following is the correct for IGBT from application point of view?",
+      "answers": {
+        "a": "High power, high frequency",
+        "b": "High power, low frequency",
+        "c": "Low power, low frequency",
+        "d": "Low power, high frequency"
+      },
+      "explanations": {
+        "a": "Explanation 1",
+        "b": "Explanation 2: Due to low conduction losses and higher switching time, IGBT is suited for high power, low frequency applications.",
+        "c": "Explanation 3",
+        "d": "Explanation 4"
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+   
+      {   
+
+      "question": "6. The correct symbolic representation of an IGBT is?",
+      "answers": {
+        "a": "<img src='images/pr2.png' height='70px'>",
+        "b": "<img src='images/pr3.png' height='70px'>",
+        "c": "<img src='images/pr4.png' height='70px'>",
+        "d": "<img src='images/pr5.png' height='70px'>"
+      },
+      "explanations": {
+        "a": "Explanation 1",
+        "b": "Explanation 2",
+        "c": "Explanation 3",
+        "d": "Explanation 4: Standard nomenclature adopted."
+      },
+      "correctAnswer": "d",
+      "difficulty": "beginner"
+    },
+
+      {
+        
+      "question": "7. Choose the correct statement.",
+      "answers": {
+        "a": "IGBT is a current controlled device.",
+        "b": "IGBT is a voltage controlled device.",
+        "c": "IGBT is an uncontrolled device.",
+        "d": "IGBT is controlled using a train of firing pulses."
+      },
+      "explanations": {
+        "a": "Explanation 1",
+        "b": "Explanation 2: IGBT is turned- ON and OFF via Gate-to-emitter voltage pulses. Hence, it is a voltage controlled device.",
+        "c": "Explanation 3",
+        "d": "Explanation 4"
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+
+      {
+
+      "question": "8. IGBT is capable of blocking:",
+      "answers": {
+        "a": "neither positive nor negative collector-to-emitter voltages.",
+        "b": "only positive collector-to-emitter voltages.",
+        "c": "only negative collector-to-emitter voltages.",
+        "d": "both positive and negative collector-to-emitter voltages."
+      },
+      "explanations": {
+        "a": "Explanation 1",
+        "b": "Explanation 2",
+        "c": "Explanation 3",
+        "d": "Explanation 4: IGBT blocks negative collector-to-emitter voltages (reverse biased) and positive collector-to-emitter voltages when gate voltage is not given (forward blocking)."
+      },
+      "correctAnswer": "d",
+      "difficulty": "beginner"
+    }
+
+  ]
+}
